@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { count, loadIndex, type Index } from './data';
 import { usePath } from './router';
-import { Shelves } from './Shelves';
+import { Shelves } from './shelves/Shelves';
 
 export function App() {
   const path = usePath();
