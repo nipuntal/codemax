@@ -1,55 +1,56 @@
-// The way in: two wireframe bookcases side by side (1:2). Courses stand one per
-// shelf on the left; picking one fills the right with its sets, two per shelf.
+// The way in: two bookcases drawn like a line illustration, side by side at
+// 1:2. Courses stand one per shelf on the left; picking one fills the right with
+// its sets, two per shelf.
 //
-// Everything is drawn in one-point perspective towards the middle of the
-// scroller, the eye of someone standing in front of both cases: each case shows
-// the inner walls it can see, planks show their top or underside, and books
-// their top and inner side. Scrolling moves the eye, so the drawing re-projects.
+// Books are flat outlines. The planks they rest on are solid: a front edge with
+// thickness, and the top or underside you'd see from the middle of the screen.
+// The uprights are long hairlines that fade out above and below. The case for
+// the step you're on scrolls; the other stays pinned in place.
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { count, type Course, type Index } from './data';
 import { getPref, setPref } from './store';
 
 interface P { x: number; y: number }
 
-const ROWS = 5;           // shelves per case: taller than the view, so it scrolls
-const CASE_DEPTH = 0.17;  // how far the back recedes towards the eye's vanishing point
-const BOOK_DEPTH = 0.06;
-const TOP = 30;
+const SHELVES = 2;
+const DEPTH = 0.16;   // how far the back of a case recedes towards the eye
 
-/** Book size follows the narrow case (a third of the pair), so the 1:2 holds at any width. */
-function geometry(total: number, gutter: number) {
-  const narrow = (total - gutter) / 3;
-  const side = Math.round(Math.min(26, narrow * 0.08));
-  const bw = Math.round(Math.min(124, narrow - side * 2));
-  const bh = Math.round(bw * 1.26);
-  return { bw, bh, side, gap: Math.round(side * 0.85), pitch: bh + Math.round(bh * 0.4) };
+/** Everything is sized off the book, and the book off the screen: big, but both shelves fit. */
+function geometry(vw: number, vh: number) {
+  const gap = Math.round(Math.min(40, Math.max(16, vw * 0.03)));
+  const byWidth = (Math.min(vw - 32, 1120) - gap) / 3 / 1.26; // narrow case = book + 2 × side (12%), with rounding to spare
+  const byHeight = (vh * 0.64) / 3.45;
+  const bw = Math.round(Math.max(84, Math.min(240, byWidth, byHeight)));
+  const bh = Math.round(bw * 1.28);
+  const side = Math.round(bw * 0.12);
+  const plank = Math.max(5, Math.round(bw * 0.045));
+  const head = Math.round(bh * 0.3);
+  const pitch = head + bh + plank;
+  const height = pitch * SHELVES;
+  // the uprights run on past the case and fade out within the margin left on screen
+  const reach = Math.round(Math.max(40, Math.min(height * 0.5, ((vh - height) / 2) * 0.85)));
+  return { gap, bw, bh, side, plank, head, pitch, narrow: bw + side * 2, height, reach };
 }
 type G = ReturnType<typeof geometry>;
 
 const toward = (p: P, vp: P, k: number): P => ({ x: p.x + (vp.x - p.x) * k, y: p.y + (vp.y - p.y) * k });
-const path = (...ps: P[]) => 'M' + ps.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join('L');
-const closed = (...ps: P[]) => path(...ps) + 'Z';
+const line = (a: P, b: P) => `M${a.x.toFixed(1)} ${a.y.toFixed(1)}L${b.x.toFixed(1)} ${b.y.toFixed(1)}`;
+const quad = (a: P, b: P, c: P, d: P) => `${line(a, b)}L${c.x.toFixed(1)} ${c.y.toFixed(1)}L${d.x.toFixed(1)} ${d.y.toFixed(1)}Z`;
 
 interface BookSpec { key: string; title: string; lines: [string, string]; href?: string; onPick?: () => void; on?: boolean }
 
-function Book({ x, y, w, h, vp, spec }: { x: number; y: number; w: number; h: number; vp: P; spec: BookSpec }) {
-  const tl = { x, y }, tr = { x: x + w, y }, br = { x: x + w, y: y + h }, bl = { x, y: y + h };
-  const back = (p: P) => toward(p, vp, BOOK_DEPTH);
-  const faces: string[] = [];
-  if (vp.y < y) faces.push(closed(tl, tr, back(tr), back(tl)));        // top, when below eye level
-  if (vp.x > x + w) faces.push(closed(tr, br, back(br), back(tr)));    // right side, when left of the eye
-  if (vp.x < x) faces.push(closed(tl, bl, back(bl), back(tl)));        // left side, when right of it
-  const front = closed(tl, tr, br, bl);
-  const pad = Math.round(Math.min(12, w * 0.08));
-
+function Book({ x, y, g, spec }: { x: number; y: number; g: G; spec: BookSpec }) {
+  const d = `M${x} ${y}h${g.bw}v${g.bh}h${-g.bw}Z`;
+  const pad = Math.round(g.bw * 0.08);
+  const title = Math.max(11, Math.round(g.bw * 0.085));
+  const small = Math.max(9.5, Math.round(g.bw * 0.058 * 2) / 2);
   const body = (
     <>
-      <path class="bk-glow" d={front} />
-      {faces.map((d) => <path class="bk-face" d={d} />)}
-      <path class="bk-front" d={front} />
-      <text class="bk-title" x={x + pad} y={y + 22}>{spec.title}</text>
-      <text class="bk-line" x={x + pad} y={y + h - 27}>{spec.lines[0]}</text>
-      <text class="bk-meta" x={x + pad} y={y + h - 12}>{spec.lines[1]}</text>
+      <path class="bk-glow" d={d} />
+      <path class="bk-front" d={d} />
+      <text class="bk-title" x={x + pad} y={y + pad + title * 0.8} font-size={title}>{spec.title}</text>
+      <text class="bk-line" x={x + pad} y={y + g.bh - pad - small * 1.55} font-size={small}>{spec.lines[0]}</text>
+      <text class="bk-meta" x={x + pad} y={y + g.bh - pad} font-size={small}>{spec.lines[1]}</text>
     </>
   );
   const cls = `bk${spec.on ? ' on' : ''}`;
@@ -65,51 +66,59 @@ function Book({ x, y, w, h, vp, spec }: { x: number; y: number; w: number; h: nu
   );
 }
 
-function Case({ label, perShelf, books, eye, g, empty }: {
-  label: string; perShelf: number; books: BookSpec[]; eye: (el: Element) => P; g: G; empty?: string;
+function Case({ id, perShelf, books, g, eye, pinned, empty }: {
+  id: string; perShelf: number; books: BookSpec[]; g: G; eye: (el: Element) => P; pinned: boolean; empty?: string;
 }) {
-  const box = useRef<HTMLDivElement>(null);
-  const [w, setW] = useState(0);
-  useLayoutEffect(() => {
-    const el = box.current!;
-    const ro = new ResizeObserver(() => setW(el.clientWidth));
-    ro.observe(el);
-    setW(el.clientWidth);
-    return () => ro.disconnect();
-  }, []);
+  const ref = useRef<HTMLDivElement>(null);
+  const w = g.narrow * perShelf;
+  const h = g.height;
+  const reach = g.reach;
+  const solid = reach / (h + reach * 2); // full strength from the case's top to its bottom
+  const vp = ref.current ? eye(ref.current) : { x: w / 2, y: h / 2 };
+  const back = (p: P) => toward(p, vp, DEPTH);
+  const plankY = (r: number) => g.head + g.bh + r * g.pitch;
 
-  const h = TOP + ROWS * g.pitch;
-  const vp = box.current ? eye(box.current) : { x: w / 2, y: h / 2 };
-  const back = (p: P) => toward(p, vp, CASE_DEPTH);
-  const c = { tl: { x: 0.5, y: 0.5 }, tr: { x: w - 0.5, y: 0.5 }, br: { x: w - 0.5, y: h - 0.5 }, bl: { x: 0.5, y: h - 0.5 } };
-  const shelfY = (r: number) => TOP + g.bh + r * g.pitch;
-  const rowW = perShelf * g.bw + (perShelf - 1) * g.gap;
-  const startX = Math.max(g.side, Math.round((w - rowW) / 2));
+  // the four uprights, front and back, running well past the case
+  const uprights = [0, w].map((x) => {
+    const top = { x, y: -reach }, bottom = { x, y: h + reach };
+    return line(top, bottom) + line(back(top), back(bottom));
+  }).join('');
 
   return (
-    <section class="case" aria-label={label}>
-      <div class="case-box" ref={box} style={{ height: `${h}px` }}>
-        {w > 0 && (
-          <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} class="case-svg">
-            {/* the hollow box: back panel, and the four edges running back to it */}
-            <path class="cs-back" d={closed(back(c.tl), back(c.tr), back(c.br), back(c.bl))} />
-            <path class="cs-back" d={[c.tl, c.tr, c.br, c.bl].map((p) => path(p, back(p))).join('')} />
-            {/* planks: a front edge and the face we can see (top below eye level, underside above) */}
-            {Array.from({ length: ROWS }, (_, r) => {
-              const a = { x: c.tl.x, y: shelfY(r) }, b = { x: c.tr.x, y: shelfY(r) };
-              return <path class="cs-plank" d={closed(a, b, back(b), back(a))} />;
-            })}
-            {/* books last: nothing on a shelf is ever in front of them */}
-            {books.map((b, i) => (
-              <Book key={b.key} x={startX + (i % perShelf) * (g.bw + g.gap)} y={shelfY(Math.floor(i / perShelf)) - g.bh}
-                w={g.bw} h={g.bh} vp={vp} spec={b} />
-            ))}
-            {!books.length && empty && <text class="cs-empty" x={startX} y={shelfY(0) - 16}>{empty}</text>}
-            <path class="cs-front" d={closed(c.tl, c.tr, c.br, c.bl)} />
-          </svg>
+    <div class={`case${pinned ? ' pinned' : ''}`} ref={ref} style={{ width: `${w}px`, height: `${h}px` }}>
+      <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} class="case-svg">
+        <defs>
+          <linearGradient id={`fade-${id}`} gradientUnits="userSpaceOnUse" x1="0" y1={-reach} x2="0" y2={h + reach}>
+            <stop offset="0" stop-color="#fff" stop-opacity="0" />
+            <stop offset={solid} stop-color="#fff" stop-opacity="1" />
+            <stop offset={1 - solid} stop-color="#fff" stop-opacity="1" />
+            <stop offset="1" stop-color="#fff" stop-opacity="0" />
+          </linearGradient>
+          <mask id={`mask-${id}`} maskUnits="userSpaceOnUse" x={-w} y={-reach} width={w * 3} height={h + reach * 2}>
+            <rect x={-w} y={-reach} width={w * 3} height={h + reach * 2} fill={`url(#fade-${id})`} />
+          </mask>
+        </defs>
+        <path class="cs-upright" d={uprights} mask={`url(#mask-${id})`} />
+        {Array.from({ length: SHELVES }, (_, r) => {
+          const y = plankY(r);
+          const ft = { x: 0, y }, fb = { x: 0, y: y + g.plank }, rt = { x: w, y }, rb = { x: w, y: y + g.plank };
+          // the face you can see: the top from above, the underside from below
+          const face = vp.y < y ? quad(ft, rt, back(rt), back(ft)) : vp.y > y + g.plank ? quad(fb, rb, back(rb), back(fb)) : null;
+          return (
+            <g key={r}>
+              {face && <path class="pl-face" d={face} />}
+              <path class="pl-front" d={quad(ft, rt, rb, fb)} />
+            </g>
+          );
+        })}
+        {books.map((b, i) => (
+          <Book key={b.key} x={g.side + (i % perShelf) * g.narrow} y={plankY(Math.floor(i / perShelf)) - g.bh} g={g} spec={b} />
+        ))}
+        {!books.length && empty && (
+          <text class="cs-empty" x={g.side} y={plankY(0) - g.bh / 2} font-size={Math.max(10, Math.round(g.bw * 0.055))}>{empty}</text>
         )}
-      </div>
-    </section>
+      </svg>
+    </div>
   );
 }
 
@@ -123,32 +132,30 @@ const setsOf = (c: Course): BookSpec[] =>
 
 export function Shelves({ index }: { index: Index }) {
   const scroller = useRef<HTMLDivElement>(null);
-  const pair = useRef<HTMLDivElement>(null);
-  const [total, setTotal] = useState(0);
-  useLayoutEffect(() => {
-    const el = pair.current!;
-    const ro = new ResizeObserver(() => setTotal(el.clientWidth));
-    ro.observe(el);
-    setTotal(el.clientWidth);
-    return () => ro.disconnect();
-  }, []);
-  const g = geometry(total, parseFloat(pair.current ? getComputedStyle(pair.current).columnGap : '') || 24);
+  const [size, setSize] = useState({ vw: 0, vh: 0 });
   const [course, setCourse] = useState<string | null>(() => getPref('course', null));
   const [, redraw] = useState(0);
   const selected = index.courses.find((c) => c.id === course) ?? null;
 
-  // Re-project on scroll and resize, at most once a frame.
+  useLayoutEffect(() => {
+    const el = scroller.current!;
+    const measure = () => setSize({ vw: el.clientWidth, vh: el.clientHeight });
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    measure();
+    return () => ro.disconnect();
+  }, []);
+
+  // Re-project on scroll, at most once a frame.
   useEffect(() => {
     const el = scroller.current!;
     let raf = 0;
     const kick = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; redraw((t) => t + 1); }); };
     el.addEventListener('scroll', kick, { passive: true });
-    addEventListener('resize', kick);
-    kick();
-    return () => { el.removeEventListener('scroll', kick); removeEventListener('resize', kick); cancelAnimationFrame(raf); };
+    return () => { el.removeEventListener('scroll', kick); cancelAnimationFrame(raf); };
   }, []);
 
-  // The eye: the middle of the scroller, in a case's own coordinates.
+  // The eye: the middle of the screen, in a case's own coordinates.
   const eye = (el: Element): P => {
     const s = scroller.current!.getBoundingClientRect(), b = el.getBoundingClientRect();
     return { x: s.left + s.width / 2 - b.left, y: s.top + s.height / 2 - b.top };
@@ -164,18 +171,21 @@ export function Shelves({ index }: { index: Index }) {
     lines: [c.sub, `${c.sets.reduce((n, s) => n + count(s.groups), 0)} questions`],
   }));
 
+  const g = size.vw ? geometry(size.vw, size.vh) : null;
   return (
     <div class="shelves" ref={scroller}>
       {/* one shared blur for every glow */}
-      <svg width="0" height="0" class="defs" aria-hidden="true">
+      <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
         <filter id="glow" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="3" /></filter>
       </svg>
-      <div class="cases" ref={pair}>
-        {total > 0 && <>
-          <Case label="Course" perShelf={1} books={courses} eye={eye} g={g} />
-          <Case label="Set" perShelf={2} books={selected ? setsOf(selected) : []} eye={eye} g={g} empty="Select a course" />
-        </>}
-      </div>
+      {g && (
+        <div class="stage" style={{ '--case-h': `${g.height}px`, columnGap: `${g.gap}px` } as preact.JSX.CSSProperties}>
+          {/* the step you're on scrolls; the other stays put */}
+          <Case id="courses" perShelf={1} books={courses} g={g} eye={eye} pinned={!!selected} />
+          <Case id="sets" perShelf={2} books={selected ? setsOf(selected) : []} g={g} eye={eye} pinned={!selected}
+            empty="Select a course" />
+        </div>
+      )}
     </div>
   );
 }
