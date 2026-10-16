@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { loadQuestion, loadSolution, type Question, type Solution } from './data';
-import { Editor, fileText, forgetAnswer } from './Editor';
+import { Editor, answerText, fileText, forgetAnswer } from './Editor';
 import { setDraft, setStatus, getPref, setPref } from './store';
+import { Output, type OutputState } from './Output';
+import * as runner from './runner/client';
 import * as Icon from './icons';
 
 const Stars = ({ n }: { n: number | null }) => (n ? <span class="stars" aria-label={`difficulty ${n} of 5`}>{'★'.repeat(n)}<i>{'★'.repeat(Math.max(0, 5 - n))}</i></span> : null);
 export { Stars };
 
-type Output = { kind: 'run' | 'test'; lines: string[] } | null;
+// The Run command each question was last given (this session only).
+const commands = new Map<string, string>();
+const jobOf = (q: Question): runner.Job => ({ path: q.path, answer: { name: q.answer.name, text: answerText(q) }, files: q.files, tests: q.tests });
 
 export function Detail({ path, crumb, backHref }: { path: string; crumb: string; backHref: string }) {
   const [q, setQ] = useState<Question | null>(null);
@@ -15,8 +19,11 @@ export function Detail({ path, crumb, backHref }: { path: string; crumb: string;
   const [doc, setDoc] = useState('readme');
   const [file, setFile] = useState('');
   const [epoch, setEpoch] = useState(0);
-  const [output, setOutput] = useState<Output>(null);
+  const [out, setOut] = useState<OutputState | null>(null);
+  const [command, setCommand] = useState('');
   const [sol, setSol] = useState<Solution | null>(null);
+  const shown = useRef(path); // the question on screen, so late results don't land on another
+  shown.current = path;
 
   useEffect(() => {
     let live = true;
@@ -27,13 +34,61 @@ export function Detail({ path, crumb, backHref }: { path: string; crumb: string;
         setQ(next);
         setDoc('readme');
         setFile(next.answer.name);
-        setOutput(null);
+        setOut(null);
         setSol(null);
+        setCommand(commands.get(next.path) ?? next.run);
+        warmed.current = false;
+        runner.warm(next, false); // the shell is small: have it ready
       },
       () => live && setFailed(true),
     );
     return () => void (live = false);
   }, [path]);
+
+  // Python and Postgres are big: fetch them once the student shows intent
+  const warmed = useRef(false);
+  const warmHeavy = () => {
+    if (!q || warmed.current) return;
+    warmed.current = true;
+    runner.warm(q, true);
+  };
+
+  const go = async (kind: 'run' | 'test') => {
+    if (!q) return;
+    if (out?.busy) return runner.stop();
+    const forPath = q.path;
+    const land = (o: OutputState) => shown.current === forPath && setOut(o);
+    const status = (s: string) => shown.current === forPath && setOut((o) => o && { ...o, status: s });
+    try {
+      if (kind === 'run') {
+        commands.set(q.path, command);
+        if (!command.trim()) return setOut({ kind: 'run', busy: false });
+        setOut({ kind: 'run', busy: true });
+        land({ kind: 'run', busy: false, result: await runner.run(jobOf(q), command, status) });
+      } else {
+        setOut({ kind: 'test', busy: true });
+        const results = await runner.test(jobOf(q), status);
+        setStatus(q.path, results.every((r) => r.pass) ? 2 : 1);
+        land({ kind: 'test', busy: false, results });
+      }
+    } catch (e) {
+      land({ kind, busy: false, error: (e as Error).message } as OutputState);
+    }
+  };
+
+  // ⌘↵ runs, ⌘⇧↵ tests — even from inside the editor
+  const goRef = useRef(go);
+  goRef.current = go;
+  useEffect(() => {
+    const key = (e: KeyboardEvent) => {
+      if (e.key !== 'Enter' || !(e.metaKey || e.ctrlKey)) return;
+      e.preventDefault();
+      e.stopPropagation();
+      void goRef.current(e.shiftKey ? 'test' : 'run');
+    };
+    addEventListener('keydown', key, true);
+    return () => removeEventListener('keydown', key, true);
+  }, []);
 
   if (failed) return <div class="empty">Couldn’t load this question.</div>;
   if (!q) return <div class="detail-loading" />;
@@ -54,14 +109,7 @@ export function Detail({ path, crumb, backHref }: { path: string; crumb: string;
       setDoc('solution');
     });
   };
-  // The runners arrive in the next step; for now the drawer shows what will run.
-  const run = (kind: 'run' | 'test') =>
-    setOutput({
-      kind,
-      lines: kind === 'test'
-        ? [`${q.tests.length} test file${q.tests.length === 1 ? '' : 's'} ready:`, ...q.tests.map((t) => `  ${t.name}`), '', 'The in-browser runner isn’t connected yet.']
-        : [`$ ${runHint(q)}`, '', 'The in-browser runner isn’t connected yet.'],
-    });
+  const busy = out?.busy ? out.kind : null;
 
   const docs = sol ? [...q.docs, { id: 'solution', title: 'Solution', html: '' }] : q.docs;
   const current = docs.find((d) => d.id === doc) ?? docs[0];
@@ -71,9 +119,13 @@ export function Detail({ path, crumb, backHref }: { path: string; crumb: string;
       <header class="toolbar">
         <a class="tb-back" href={backHref} aria-label="Back to list"><Icon.Back /></a>
         <div class="crumb">{crumb}</div>
-        <div class="tb-group">
-          <button class="tb-btn" onClick={() => run('run')} title="Run (⌘↵)"><Icon.Play size={16} /><span>Run</span></button>
-          <button class="tb-btn primary" onClick={() => run('test')} title="Test (⌘⇧↵)"><Icon.Check size={16} /><span>Test</span></button>
+        <div class="tb-group" onPointerEnter={warmHeavy}>
+          <button class="tb-btn" onClick={() => go('run')} disabled={busy === 'test'} title="Run (⌘↵)">
+            {busy === 'run' ? <><Icon.Stop size={16} /><span>Stop</span></> : <><Icon.Play size={16} /><span>Run</span></>}
+          </button>
+          <button class="tb-btn primary" onClick={() => go('test')} disabled={busy === 'run'} title="Test (⌘⇧↵)">
+            {busy === 'test' ? <><Icon.Stop size={16} /><span>Stop</span></> : <><Icon.Check size={16} /><span>Test</span></>}
+          </button>
         </div>
         <div class="tb-group">
           <button class="tb-icon" onClick={reset} title="Reset to starter"><Icon.Reset /></button>
@@ -109,7 +161,7 @@ export function Detail({ path, crumb, backHref }: { path: string; crumb: string;
           )}
         </article>
 
-        <section class="code">
+        <section class="code" onKeyDown={warmHeavy}>
           <nav class="files" aria-label="Files">
             <button class={`file answer${file === q.answer.name ? ' on' : ''}`} onClick={() => setFile(q.answer.name)}>
               <Icon.Pencil size={13} />{q.answer.name}
@@ -119,24 +171,14 @@ export function Detail({ path, crumb, backHref }: { path: string; crumb: string;
             ))}
           </nav>
           <Editor q={q} file={file || q.answer.name} epoch={epoch} />
-          {output && (
-            <div class="output">
-              <div class="output-head">
-                <span>{output.kind === 'test' ? 'Test' : 'Run'}</span>
-                <button class="tb-icon small" onClick={() => setOutput(null)} aria-label="Close output"><Icon.Close size={14} /></button>
-              </div>
-              <pre>{output.lines.join('\n')}</pre>
-            </div>
+          {out && (
+            <Output state={out} command={command} onCommand={setCommand}
+              onRun={() => go('run')} onClose={() => { if (out.busy) runner.stop(); setOut(null); }} />
           )}
         </section>
       </Split>
     </div>
   );
-}
-
-function runHint(q: Question) {
-  const a = q.answer.name;
-  return q.lang === 'sql' ? `psql -f ${a}` : q.lang === 'python' ? `python3 ${a}` : q.lang === 'shell' ? `./${a}` : `cat ${a}`;
 }
 
 // Two panes and a draggable divider. Dragging writes a CSS variable directly,

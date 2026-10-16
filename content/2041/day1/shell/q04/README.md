@@ -32,9 +32,9 @@ Input: `red red blue green blue red` (one per line)
 sort | uniq -c | sort -rn
 ```
 ```
-   3 red
-   2 blue
-   1 green
+      3 red
+      2 blue
+      1 green
 ```
 Note `uniq -c` pads the count with **leading spaces**. If the expected output has no
 padding you must strip it — but usually the expected output keeps it, so don't fight it.

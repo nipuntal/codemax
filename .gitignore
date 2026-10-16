@@ -4,3 +4,4 @@ public/c
 .DS_Store
 .vercel
 .env*
+public/pyodide

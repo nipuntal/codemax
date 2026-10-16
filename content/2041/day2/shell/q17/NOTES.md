@@ -44,7 +44,7 @@ build a script around it. `wc -l/-w/-c` are POSIX; `-L` is not.
 ## `wc -L < "$f"` vs `wc -L "$f"`
 With a filename argument, `wc` prints the count **and the filename**:
 ```
-   58 long.txt
+58 long.txt
 ```
 With input redirected it prints only the number. Inside `$( )` you want the bare
 number — always redirect.

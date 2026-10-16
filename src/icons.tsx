@@ -8,6 +8,7 @@ const I = (d: JSX.Element) => (p: { size?: number }) => (
 
 export const Sidebar = I(<><rect x="2.5" y="3.5" width="15" height="13" rx="3" /><path d="M7.5 3.5v13M4.5 7h1M4.5 9.5h1" /></>);
 export const Play = I(<path d="M6.5 4.5v11l9-5.5z" />);
+export const Stop = I(<rect x="5.5" y="5.5" width="9" height="9" rx="1.5" />);
 export const Check = I(<path d="M4 10.5l4 4 8-9" />);
 export const Reset = I(<><path d="M4 10a6 6 0 1 0 1.8-4.3" /><path d="M4 3.5v3h3" /></>);
 export const Bulb = I(<><path d="M7.5 14.5h5M8.5 17h3" /><path d="M10 3a5 5 0 0 0-3 9c.6.5 1 1.1 1 1.8v.7h4v-.7c0-.7.4-1.3 1-1.8A5 5 0 0 0 10 3z" /></>);

@@ -107,7 +107,77 @@ function walk(dir, base = dir, out = []) {
 function fileEntry(abs, name) {
   const buf = fs.readFileSync(abs);
   const text = new TextDecoder('utf-8', { fatal: false }).decode(buf);
-  return text.includes('�') ? { name, b64: buf.toString('base64') } : { name, text };
+  const entry = text.includes('�') ? { name, b64: buf.toString('base64') } : { name, text };
+  return fs.statSync(abs).mode & 0o100 ? { ...entry, x: true } : entry;
+}
+
+// ---- tests -> a uniform spec the browser runner executes
+//
+// 2041: test.sh computes $got (running the answer) and $want (from
+// expected_output.txt), then compares. We keep everything up to the comparison
+// and have the shell hand both strings back, so the comparison and the diff
+// happen in the UI. 3311: each tests/NN.sh is one command whose output must
+// equal NN.expected byte for byte, after loading qNN.sql.
+const GOT = '/tmp/.codemax-got', WANT = '/tmp/.codemax-want';
+
+function spec2041(testSh, answer) {
+  const lines = testSh.split('\n');
+  const end = lines.findIndex((l) => /^if \[ "\$got" = "\$want" \]/.test(l));
+  if (end < 0) throw new Error('test.sh without the standard comparison');
+  const body = lines.slice(0, end).filter((l) =>
+    !/^#/.test(l) &&
+    !/^cd "\$\(dirname "\$0"\)"/.test(l) &&
+    !/^cp \.\S+ \S+$/.test(l) &&                // restore-from-snapshot: every run starts pristine anyway
+    !/^\[ "\$1" = (reset|solution) \]/.test(l) &&
+    !/^chmod \+x "\$A"/.test(l));
+  // just-bash's ls -l doesn't show permissions; stat prints the same 10 characters
+  for (let i = 0; i < body.length; i++) body[i] = body[i].replace(/ls -l ([^|;)]+?) \| cut -c1-10/g, 'stat -c %A $1');
+  const script = [...body, `printf '%s' "$got" > ${GOT}`, `printf '%s' "$want" > ${WANT}`].join('\n').replace(/^\n+/, '');
+  // what to show the student: the commands that produce $got, with $A spelled out
+  const src = body.join('\n');
+  const got = src.match(/^got=\$\(\s*([\s\S]*?)\s*\)\s*$/m)?.[1] ?? '';
+  const fn = got.match(/^(\w+)\b/)?.[1];
+  const fnBody = fn && src.match(new RegExp(`^${fn}\\(\\)\\s*\\{\\n([\\s\\S]*?)\\n\\}`, 'm'))?.[1];
+  const show = (fnBody ? fnBody.replace(/^ {4}/gm, '') : got)
+    .replace(/"?\$A"?/g, `./${answer}`).replace(/\$PWD\//g, './').replace(/\s*;\s*/g, '\n').trim();
+  return { kind: 'compare', cases: [{ name: 'test', show, script }] };
+}
+
+function spec3311(dir, answer) {
+  const tests = fs.readdirSync(path.join(dir, 'tests')).filter((f) => /^\d+\.sh$/.test(f)).sort();
+  return {
+    kind: 'exact',
+    setup: answer.endsWith('.sql') ? `psql -q -v ON_ERROR_STOP=1 -f ${answer}` : null,
+    cases: tests.map((f) => {
+      // "cd .. && ./reload-db && cd qNN &&" becomes a flag: the runner rewinds the database
+      const raw = read(path.join(dir, 'tests', f)).trim();
+      const script = raw.replace(/^cd \.\. && \.\/reload-db[^&]*&& cd q\d+ && /, '');
+      return {
+        name: f.replace('.sh', ''), show: script, script, ...(script !== raw && { reload: true }),
+        expected: read(path.join(dir, 'tests', f.replace('.sh', '.expected'))),
+      };
+    }),
+  };
+}
+
+// The command the Run box starts with: the README's first example, or the first test.
+function runHint(readme, answer, tests) {
+  if (tests.kind === 'exact') return tests.cases[0]?.script ?? '';
+  const q = answer.replace(/\.\w+$/, '');
+  const ex = readme.match(new RegExp('^\\s*(?:\\$ )?((?:\\./|python3 (?:\\./)?)' + q + '\\.\\w+\\b[^\\n`]*)$', 'm'));
+  if (ex) return ex[1].trim();
+  return answer.endsWith('.txt') ? '' : `./${answer}`;
+}
+
+// pg_dump's COPY blocks -> INSERTs, so the database loads with one exec().
+function dumpToSql(dump) {
+  const unescape = (v) => v === '\\N' ? 'NULL' : "'" + v.replace(/\\(.)/g, (_, c) => ({ t: '\t', n: '\n', r: '\r', '\\': '\\' })[c] ?? c).replace(/'/g, "''") + "'";
+  return dump.replace(/^COPY (\S+) \(([^)]*)\) FROM stdin;\n([\s\S]*?)^\\\.\n/gm, (_, table, cols, data) => {
+    const rows = data.split('\n').filter(Boolean).map((l) => `(${l.split('\t').map(unescape).join(',')})`);
+    const out = [];
+    for (let i = 0; i < rows.length; i += 1000) out.push(`INSERT INTO ${table} (${cols}) VALUES\n${rows.slice(i, i + 1000).join(',\n')};\n`);
+    return out.join('');
+  });
 }
 
 function buildQuestion(dir, qid, urlPath) {
@@ -126,7 +196,11 @@ function buildQuestion(dir, qid, urlPath) {
   const isDoc = (f) => /^(README|NOTES|WALKTHROUGH)\.md$/.test(f);
   const files = all.filter((f) => f !== answer && !isTest(f) && !isDoc(f) && !f.startsWith('solution/'))
     .map((f) => fileEntry(path.join(dir, f), f));
-  const tests = all.filter(isTest).map((f) => fileEntry(path.join(dir, f), f));
+  // the files a test needs beside the answer (expected_output.txt is read by test.sh)
+  const testFiles = all.filter((f) => f === 'expected_output.txt').map((f) => fileEntry(path.join(dir, f), f));
+  const tests = fs.existsSync(path.join(dir, 'test.sh'))
+    ? { ...spec2041(read(path.join(dir, 'test.sh')), answer), files: testFiles }
+    : spec3311(dir, answer);
 
   const solDocs = [];
   const walkthrough = read(path.join(dir, 'WALKTHROUGH.md'));
@@ -142,6 +216,7 @@ function buildQuestion(dir, qid, urlPath) {
     path: urlPath, ...meta, lang: LANG[ext],
     answer: { name: answer, text: read(path.join(dir, answer)) },
     docs, files, tests,
+    run: runHint(readme, answer, tests),
   };
   const summary = { path: urlPath, n: +qid.slice(1), title: meta.title, tag: meta.tag, stars: meta.stars, mins: meta.mins, lang: LANG[ext], preview: preview(readme) };
   return { q, solution, summary };
@@ -182,4 +257,16 @@ for (const c of COURSES) {
   index.courses.push(course);
 }
 emit('index.json', index);
+fs.writeFileSync(path.join(OUT, '3311/classes.sql'), dumpToSql(read(path.join(SRC, '3311/db/classes.dump'))));
 console.log(`content: ${count} questions, ${(bytes / 1024 / 1024).toFixed(1)} MB written to public/c`);
+
+// Pyodide's runtime files, served from a versioned path so they can be cached forever.
+const pyVersion = JSON.parse(read(path.resolve('node_modules/pyodide/package.json'))).version;
+const pyOut = path.resolve('public/pyodide', pyVersion);
+if (!fs.existsSync(pyOut)) {
+  fs.rmSync(path.resolve('public/pyodide'), { recursive: true, force: true });
+  fs.mkdirSync(pyOut, { recursive: true });
+  for (const f of ['pyodide.asm.mjs', 'pyodide.asm.wasm', 'python_stdlib.zip', 'pyodide-lock.json']) {
+    fs.copyFileSync(path.resolve('node_modules/pyodide', f), path.join(pyOut, f));
+  }
+}

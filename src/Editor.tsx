@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'preact/hooks';
 import type { FileEntry, Lang, Question } from './data';
-import { getDraft, setDraft, setStatus } from './store';
+import { getDraft, getStatus, setDraft, setStatus } from './store';
 import type { EditorState, EditorView } from './cm';
 
 // Start fetching CodeMirror as soon as this module is evaluated (app start),
@@ -13,13 +13,28 @@ const states = new Map<string, EditorState>();
 export const forgetAnswer = (q: Question) => states.delete(`${q.path}::${q.answer.name}`);
 
 const timers = new Map<string, number>();
+function save(q: Question, text: string) {
+  clearTimeout(timers.get(q.path));
+  timers.delete(q.path);
+  const pristine = text === q.answer.text;
+  setDraft(q.path, pristine ? undefined : text);
+  if (pristine) setStatus(q.path, 0);
+  else if (!getStatus(q.path)) setStatus(q.path, 1);
+}
 function saveLater(q: Question, text: string) {
   clearTimeout(timers.get(q.path));
-  timers.set(q.path, window.setTimeout(() => {
-    const pristine = text === q.answer.text;
-    setDraft(q.path, pristine ? undefined : text);
-    setStatus(q.path, pristine ? 0 : 1);
-  }, 300));
+  timers.set(q.path, window.setTimeout(() => save(q, text), 300));
+}
+
+// The view on screen, so Run/Test read exactly what is in the editor.
+let live: { view: EditorView; key: string } | null = null;
+
+/** The answer as it stands right now (saved first, so nothing is lost). */
+export function answerText(q: Question) {
+  const k = `${q.path}::${q.answer.name}`;
+  const text = live?.key === k ? live.view.state.doc.toString() : states.get(k)?.doc.toString() ?? getDraft(q.path) ?? q.answer.text;
+  if (timers.has(q.path)) save(q, text);
+  return text;
 }
 
 const langOf = (name: string, fallback: Lang): Lang =>
@@ -51,6 +66,7 @@ export function Editor({ q, file, epoch }: { q: Question; file: string; epoch: n
     }
     key.current = k;
     v.setState(s);
+    live = { view: v, key: k };
   }
 
   useEffect(() => {
@@ -65,6 +81,7 @@ export function Editor({ q, file, epoch }: { q: Question; file: string; epoch: n
       dead = true;
       if (view.current && key.current) states.set(key.current, view.current.state);
       view.current?.destroy();
+      live = null;
     };
   }, []);
 

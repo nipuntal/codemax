@@ -24,6 +24,7 @@ export const setDraft = (path: string, text: string | undefined) => write(`cm:dr
 export type Status = 0 | 1 | 2;
 let progress = read<Record<string, Status>>('cm:progress', {});
 const subs = new Set<() => void>();
+export const getStatus = (path: string): Status => progress[path] ?? 0;
 export function setStatus(path: string, s: Status) {
   if ((progress[path] ?? 0) === s) return;
   progress = { ...progress, [path]: s };

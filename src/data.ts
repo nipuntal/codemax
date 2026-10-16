@@ -1,5 +1,8 @@
 // Content is static JSON under /c, produced by scripts/build-content.mjs.
 // Every fetch is memoised, so hovering a row warms the cache for the click.
+import type { Spec, FileEntry } from './runner/engine';
+
+export type { FileEntry };
 
 export type Lang = 'shell' | 'python' | 'sql' | 'text';
 
@@ -18,7 +21,6 @@ export interface QSet { id: string; title: string; blurb: string; groups: Group[
 export interface Course { id: string; title: string; sub: string; sets: QSet[] }
 export interface Index { courses: Course[] }
 
-export interface FileEntry { name: string; text?: string; b64?: string }
 export interface Doc { id: string; title: string; html: string }
 export interface Question {
   path: string;
@@ -30,7 +32,8 @@ export interface Question {
   answer: { name: string; text: string };
   docs: Doc[];
   files: FileEntry[];
-  tests: FileEntry[];
+  tests: Spec;
+  run: string;
 }
 export interface Solution { files: FileEntry[]; docs: Doc[] }
 

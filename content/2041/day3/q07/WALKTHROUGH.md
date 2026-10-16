@@ -119,8 +119,8 @@ The female records are:
 Five records, **three** students. After `cut -f2,3 | sort -u` you have three lines.
 Extracting given names gives `Mary`, `Heidi`, `Mary` → counts:
 ```
-   2 Mary
-   1 Heidi
+      2 Mary
+      1 Heidi
 ```
 Answer: **Mary**.
 
@@ -132,9 +132,9 @@ of bug, and it is exactly what the question is testing.
 ### The tie-break really fires on the big file
 `more_enrollments.txt` has a genuine three-way tie:
 ```
-   2 Lien
-   2 Linh
-   2 Xiu
+      2 Lien
+      2 Linh
+      2 Xiu
 ```
 `sort -k1,1rn -k2,2 | head -n 1` gives `Lien`. Plain `sort -rn | head -n 1` gives
 whichever of the three your sort implementation happens to emit first — it may well

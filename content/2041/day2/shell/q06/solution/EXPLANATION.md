@@ -32,9 +32,9 @@ gets a clean `zid|Surname`. Reversing them works too but leaves you handling pad
 ## The tie-break, demonstrated
 This data has a genuine **three-way tie**. After the dedupe, the counts are:
 ```
-   2 Klum
-   2 Thorpe
-   2 Wang
+      2 Klum
+      2 Thorpe
+      2 Wang
 ```
 * `sort -rn | head -n 1` → **any** of the three, depending on your sort implementation.
   It may well pass on your laptop and fail on the marker's machine. That is the worst
