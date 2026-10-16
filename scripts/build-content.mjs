@@ -55,19 +55,20 @@ function parseHead(md) {
   const lines = md.split('\n');
   const h1 = decode((lines.find((l) => l.startsWith('# ')) || '# ?').slice(2)).trim();
   const head = decode(lines.slice(0, 8).join('\n'));
-  let title = h1;
+  let title = h1, kind = null;
   const dash = h1.match(/—\s*(.+)$/);
   if (dash) title = dash[1].split(/\s{2,}·\s{2,}|\s{2,}(?=\()/)[0].trim();
   else {
-    // 3311: the h1 is a label, the h2 is the title
+    // 3311: the h1 is a label ("Module 01 · SQL"), the h2 is the title
     const h2 = lines.find((l) => l.startsWith('## '));
     title = h2 ? decode(h2.slice(3)).trim() : h1;
+    kind = h1.split('·')[1]?.trim() || null; // SQL, PLpgSQL, Python + Psycopg2 (3311 gives no times)
   }
   // sources rate out of five (☆ pads 3311's); shown out of three: 1 | 2–3 | 4–5
   const rated = (head.match(/[⭐★]/gu) || []).length;
   const stars = rated ? Math.ceil((Math.min(rated, 5) * 3) / 5) : null;
   const mins = +(head.match(/(\d+)\s*min/) || [])[1] || null;
-  return { title, stars, mins };
+  return { title, stars, mins, kind };
 }
 
 // Drop the heading block that the UI shows itself (h1, 3311's h2, the meta line).
@@ -196,12 +197,12 @@ function buildQuestion(dir, qid, urlPath) {
   };
 
   const q = {
-    path: urlPath, title: meta.title, stars: meta.stars, mins: meta.mins, lang: LANG[ext],
+    path: urlPath, title: meta.title, stars: meta.stars, mins: meta.mins, kind: meta.kind, lang: LANG[ext],
     answer: { name: answer, text: read(path.join(dir, answer)) },
     docs, files, tests,
     run: runHint(readme, answer, tests),
   };
-  const summary = { path: urlPath, n: +qid.slice(1), title: meta.title, stars: meta.stars, mins: meta.mins };
+  const summary = { path: urlPath, n: +qid.slice(1), title: meta.title, stars: meta.stars, mins: meta.mins, kind: meta.kind };
   return { q, solution, summary };
 }
 

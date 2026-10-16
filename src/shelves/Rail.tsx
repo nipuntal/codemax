@@ -3,7 +3,7 @@
 // beneath it, a little smaller and shaded from behind as a group. Drawn like the
 // landing shelves, but quieter: the eye on the rail's own centre line so it's
 // symmetrical, no uprights or depth edges, and small plain books (a front
-// titled in lowercase; Home's shows a house). The planks keep their depth.
+// titled in lowercase). The planks keep their depth.
 // Clicking the open course folds its sets away behind it, one by one; clicking
 // it again unfolds them. A small tile above Home tucks the whole rail away;
 // while it's hidden, the same tile stands before the list's title.
@@ -12,7 +12,6 @@ import type { Index } from '../data';
 import { useShelfScroll } from './scroll';
 import { GlowFilter, Shelf, courseBook, setBooks, type BookAt, type BookSpec, type Frame } from './draw';
 import * as Icon from '../icons';
-import { Home } from './covers';
 
 const INSET = 14;       // the toggle's (and every book's) distance from the rail's edges
 const HEAD = 16;        // headroom above each book
@@ -73,7 +72,7 @@ export function Rail({ index, course, set, onToggle }: { index: Index; course?: 
 
   // one book per shelf: each course, then (under the open one) its sets
   type Row = { spec: BookSpec; small: boolean; k?: number }; // k: which set under the course
-  const rows: Row[] = [{ spec: { key: 'home', title: 'Home', sub: '', meta: '', href: '/', icon: true, art: (x, y, sz) => <Home x={x} y={y} s={sz} /> }, small: false }];
+  const rows: Row[] = [{ spec: { key: 'home', title: 'Home', sub: '', meta: '', href: '/' }, small: false }];
   let parent = -1;
   for (const c of index.courses) {
     const open = c.id === course;

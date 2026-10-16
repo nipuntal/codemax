@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { count, prefetch, type Scope } from './data';
 import type { Status } from './store';
-import { Level } from './Detail';
+import { Facts } from './Detail';
 
 /** `lead`: something to stand before the title (the rail's toggle, while the rail is hidden). */
 export function List({ scope, active, progress, lead }: {
@@ -41,12 +41,7 @@ export function List({ scope, active, progress, lead }: {
                     <strong>{q.title}</strong>
                     <span class="qn label">Q{q.n}</span>
                   </div>
-                  {(q.stars || q.mins) && (
-                    <div class="card-sub">
-                      <Level n={q.stars} />
-                      {q.mins && <span class="mins label">{q.mins} min</span>}
-                    </div>
-                  )}
+                  <div class="card-sub"><Facts q={q} /></div>
                 </a>
               );
             })}

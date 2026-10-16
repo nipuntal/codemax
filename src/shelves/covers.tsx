@@ -45,16 +45,3 @@ export function Sheets({ x, y, s, n }: { x: number; y: number; s: number; n: num
     </g>
   );
 }
-
-/** Home: a house, roof and door. */
-export function Home({ x, y, s }: { x: number; y: number; s: number }) {
-  const w = s * 0.7, h = s * 0.46, l = x + (s - w) / 2, base = y + s * 0.9, eave = base - h;
-  const door = w * 0.22;
-  return (
-    <g class="art">
-      <path class="art-fill" d={`M${f(l)} ${f(base)}V${f(eave)}L${f(l + w / 2)} ${f(eave - w * 0.42)}L${f(l + w)} ${f(eave)}V${f(base)}Z`} />
-      <path d={`M${f(l - w * 0.08)} ${f(eave + w * 0.05)}L${f(l + w / 2)} ${f(eave - w * 0.42)}L${f(l + w * 1.08)} ${f(eave + w * 0.05)}M${f(l)} ${f(eave)}V${f(base)}H${f(l + w)}V${f(eave)}`} />
-      <path d={`M${f(l + w / 2 - door / 2)} ${f(base)}v${f(-h * 0.55)}h${f(door)}v${f(h * 0.55)}`} />
-    </g>
-  );
-}

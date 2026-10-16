@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { loadQuestion, loadSolution, type Question, type Solution } from './data';
+import { loadQuestion, loadSolution, prefetch, type Question, type Solution } from './data';
 import { Editor, answerText, fileText, forgetAnswer } from './Editor';
 import { setDraft, setStatus, getPref, setPref } from './store';
 import { Output, type OutputState } from './Output';
@@ -15,6 +15,18 @@ export const Level = ({ n }: { n: number | null }) => (n ? (
     {LEVELS[n - 1]}
   </span>
 ) : null);
+
+/**
+ * A question's row of facts: difficulty on the left (or "Lesson" for the unrated
+ * teaching modules), and its time on the right (or, where the course gives no
+ * times, its language).
+ */
+export const Facts = ({ q }: { q: Pick<Question, 'stars' | 'mins' | 'kind'> }) => (
+  <>
+    {q.stars ? <Level n={q.stars} /> : <span class="level label">Lesson</span>}
+    <span class="mins label">{q.mins ? `${q.mins} min` : q.kind}</span>
+  </>
+);
 
 /** A shortcut, one key per square. */
 const Keys = ({ k }: { k: string[] }) => <span class="keys" aria-hidden="true">{k.map((x) => <kbd>{x}</kbd>)}</span>;
@@ -42,6 +54,8 @@ export function Detail({ path, crumb, backHref, next }: { path: string; crumb: s
   nextRef.current = next;
   const advance = useRef(0);
   useEffect(() => () => clearTimeout(advance.current), [path]);
+  // have the next question in hand, so moving on to it is instant
+  useEffect(() => void (next && prefetch(next)), [next]);
 
   useEffect(() => {
     let live = true;
@@ -161,12 +175,7 @@ export function Detail({ path, crumb, backHref, next }: { path: string; crumb: s
         <article class="doc">
           <div class="doc-head">
             <h1>{q.title}</h1>
-            {(q.stars || q.mins) && (
-              <div class="meta">
-                <Level n={q.stars} />
-                {q.mins && <span class="label">{q.mins} min</span>}
-              </div>
-            )}
+            <div class="meta"><Facts q={q} /></div>
             {docs.length > 1 && (
               <nav class="seg" role="tablist">
                 {docs.map((d) => (

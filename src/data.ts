@@ -12,6 +12,7 @@ export interface Summary {
   title: string;
   stars: number | null; // difficulty, 1–3
   mins: number | null;
+  kind: string | null;  // 3311's language: SQL, PLpgSQL, Python + Psycopg2
 }
 export interface Group { id: string | null; title: string | null; items: Summary[] }
 export interface QSet { id: string; title: string; blurb: string; groups: Group[] }
@@ -24,6 +25,7 @@ export interface Question {
   title: string;
   stars: number | null;
   mins: number | null;
+  kind: string | null;
   lang: Lang;
   answer: { name: string; text: string };
   docs: Doc[];
