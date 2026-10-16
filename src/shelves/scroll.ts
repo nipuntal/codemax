@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import type { RefObject } from 'preact';
 
 const STIFF = 1.6;  // resistance past the end: higher gives less
-const PULL = 45;    // ms time constant of the pull back
+const PULL = 12;    // ms time constant of the pull back: back within ~3 frames, no visible ease
 
 const band = (x: number, give: number) => give * (1 - 1 / ((x / give) * STIFF + 1));
 
@@ -35,7 +35,7 @@ export function useRubberScroll(el: RefObject<HTMLElement>, count: number, activ
           const to = Math.min(live.current.max, Math.max(0, v));
           if (v === to) return v;
           const next = v + (to - v) * k;
-          if (Math.abs(to - next) < 0.5) return to;
+          if (Math.abs(to - next) < 2) return to;
           out = true;
           return next;
         });
