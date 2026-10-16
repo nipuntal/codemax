@@ -28,7 +28,7 @@ function layout(vw: number, vh: number) {
     fr, bw, side, height,
     cases: [{ x: left, w: narrow }, { x: left + narrow + gap, w: narrow * 2 }],
     reach: Math.round(Math.max(40, Math.min(height * 0.5, ((vh - height) / 2) * 0.85))),
-    max: Math.round(pitch * 0.5), // half a shelf of scroll
+    give: Math.round(pitch * 0.25), // a quarter shelf of scroll each way
   };
 }
 
@@ -48,7 +48,7 @@ export function Shelves({ index }: { index: Index }) {
   }, []);
 
   const l = size.vw ? layout(size.vw, size.vh) : null;
-  const dy = useShelfScroll(root, 2, selected ? 1 : 0, l?.max ?? 0);
+  const dy = useShelfScroll(root, 2, selected ? 1 : 0, -(l?.give ?? 0), l?.give ?? 0);
   if (!l) return <div class="shelves" ref={root} />;
 
   const pick = (id: string) => {

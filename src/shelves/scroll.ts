@@ -1,12 +1,12 @@
 // Scrolling done by hand, so the scene can redraw its perspective as it moves.
-// Wheel and touch move one offset (the active one), clamped to [0, max].
+// Wheel and touch move one offset (the active one), clamped to [min, max].
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { RefObject } from 'preact';
 
-export function useShelfScroll(el: RefObject<HTMLElement>, count: number, active: number, max: number) {
+export function useShelfScroll(el: RefObject<HTMLElement>, count: number, active: number, min: number, max: number) {
   const offsets = useRef<number[]>(Array(count).fill(0));
-  const live = useRef({ active, max });
-  live.current = { active, max };
+  const live = useRef({ active, min, max });
+  live.current = { active, min, max };
   const [, redraw] = useState(0);
 
   useEffect(() => {
@@ -14,8 +14,8 @@ export function useShelfScroll(el: RefObject<HTMLElement>, count: number, active
     let raf = 0;
     let touch: { id: number; y: number } | null = null;
     const move = (dy: number) => {
-      const { active, max } = live.current;
-      const next = Math.max(0, Math.min(max, offsets.current[active] + dy));
+      const { active, min, max } = live.current;
+      const next = Math.max(min, Math.min(max, offsets.current[active] + dy));
       if (next === offsets.current[active]) return;
       offsets.current[active] = next;
       if (!raf) raf = requestAnimationFrame(() => { raf = 0; redraw((n) => n + 1); });
@@ -48,6 +48,6 @@ export function useShelfScroll(el: RefObject<HTMLElement>, count: number, active
   }, []);
 
   // a resize can shrink the range under an offset
-  offsets.current = offsets.current.map((o) => Math.min(o, max));
+  offsets.current = offsets.current.map((o) => Math.max(min, Math.min(o, max)));
   return offsets.current;
 }
