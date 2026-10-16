@@ -2,12 +2,11 @@ import { useEffect, useRef } from 'preact/hooks';
 import { count, prefetch, type Scope } from './data';
 import type { Status } from './store';
 import { Stars } from './Detail';
-import * as Icon from './icons';
 
 const LANG = { shell: 'Shell', python: 'Python', sql: 'SQL', text: 'Text' } as const;
 
-export function List({ scope, active, progress, sidebarOpen, onToggleSidebar }: {
-  scope: Scope; active: string | null; progress: Record<string, Status>; sidebarOpen: boolean; onToggleSidebar: () => void;
+export function List({ scope, active, progress }: {
+  scope: Scope; active: string | null; progress: Record<string, Status>;
 }) {
   const box = useRef<HTMLDivElement>(null);
   // Keep the selected card in view: centred on a deep link, nudged on ↑/↓.
@@ -23,7 +22,6 @@ export function List({ scope, active, progress, sidebarOpen, onToggleSidebar }: 
   return (
     <section class="list" ref={box}>
       <header class="list-head">
-        {!sidebarOpen && <button class="tb-icon" onClick={onToggleSidebar} title="Show sidebar"><Icon.Sidebar /></button>}
         <div>
           <h1>{scope.title}</h1>
           <p>{scope.subtitle} · {count(scope.groups)} questions</p>

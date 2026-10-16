@@ -1,25 +1,19 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { loadIndex, scopeFor, type Index, type Scope } from './data';
 import { navigate, usePath } from './router';
-import { getPref, setPref, useProgress } from './store';
-import { Sidebar } from './Sidebar';
+import { useProgress } from './store';
 import { List } from './List';
 import { Detail } from './Detail';
 import { Shelves } from './shelves/Shelves';
+import { Rail } from './shelves/Rail';
 
 export function App() {
   const path = usePath();
   const progress = useProgress();
   const [index, setIndex] = useState<Index | null>(null);
-  const [sidebar, setSidebar] = useState<boolean>(() => getPref('sidebar', innerWidth >= 1100));
   const lastScope = useRef<Scope | null>(null);
 
   useEffect(() => void loadIndex().then(setIndex), []);
-
-  const toggleSidebar = () => {
-    setSidebar(!sidebar);
-    setPref('sidebar', !sidebar);
-  };
 
   const segs = path.split('/').filter(Boolean);
   const isQuestion = segs.length > 2 && /^\d+$/.test(segs[segs.length - 1]);
@@ -61,11 +55,10 @@ export function App() {
   if (path === '/') return <Shelves index={index} />;
 
   return (
-    <div class="app" data-sidebar={sidebar ? 'open' : 'closed'} data-view={qpath ? 'detail' : 'list'}>
-      {sidebar && <Sidebar index={index} active={scope?.key ?? ''} progress={progress} onToggle={toggleSidebar} />}
-      {sidebar && <div class="scrim" onClick={toggleSidebar} />}
+    <div class="app" data-view={qpath ? 'detail' : 'list'}>
+      <Rail index={index} course={segs[0]} set={segs[1]} />
       {scope
-        ? <List scope={scope} active={qpath} progress={progress} sidebarOpen={sidebar} onToggleSidebar={toggleSidebar} />
+        ? <List scope={scope} active={qpath} progress={progress} />
         : <section class="list"><div class="empty">Nothing here.</div></section>}
       <main class="detail">
         {qpath && scope
