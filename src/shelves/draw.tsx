@@ -42,11 +42,11 @@ export interface BookSpec {
   href?: string; onPick?: () => void; on?: boolean;
 }
 
-/** A book: a box showing its front, and its top and inner side when the eye can see them. */
-function Book({ r, eye, spec }: { r: Rect; eye: P; spec: BookSpec }) {
+/** A book: a box showing its front, and its top and inner side when the eye can see them (just the front when `flat`). */
+function Book({ r, eye, spec, flat }: { r: Rect; eye: P; spec: BookSpec; flat?: boolean }) {
   const tl = { x: r.x, y: r.y }, tr = { x: r.x + r.w, y: r.y }, br = { x: r.x + r.w, y: r.y + r.h }, bl = { x: r.x, y: r.y + r.h };
   const back = (p: P) => toward(p, eye, BOOK_DEPTH);
-  const faces = [
+  const faces = flat ? [] : [
     eye.y < r.y && poly(tl, tr, back(tr), back(tl)),
     eye.x > r.x + r.w && poly(tr, br, back(br), back(tr)),
     eye.x < r.x && poly(tl, bl, back(bl), back(tl)),
@@ -95,18 +95,19 @@ export interface BookAt { spec: BookSpec; r: Rect; alpha?: number; scale?: numbe
 
 /**
  * One case's planks and books, scrolled up by `dy`. `tint` shades a band
- * [top, bottom] from behind, to group what stands in it.
+ * [top, bottom] from behind, to group what stands in it. `flat` drops the
+ * depth: no plank faces or depth edges, and books are just their fronts.
  */
-export function Shelf({ id, fr, x, w, planks, dy, books, tint, tintOn, backLines = true, empty }: {
+export function Shelf({ id, fr, x, w, planks, dy, books, tint, tintOn, flat, empty }: {
   id: string; fr: Frame; x: number; w: number; planks: PlankAt[]; dy: number;
-  books: BookAt[]; tint?: [number, number]; tintOn?: boolean; backLines?: boolean; empty?: string;
+  books: BookAt[]; tint?: [number, number]; tintOn?: boolean; flat?: boolean; empty?: string;
 }) {
   const back = (p: P) => toward(p, fr.eye, DEPTH);
   const ps = planks.map(({ y: rest, alpha = 1 }) => {
     const y = rest - dy;
     const above = fr.eye.y < y, below = fr.eye.y > y + fr.plank;
     const edge = above ? y : y + fr.plank; // the top face from above, the underside from below
-    return { y, alpha, seen: above || below, a: { x, y: edge }, b: { x: x + w, y: edge } };
+    return { y, alpha, seen: !flat && (above || below), a: { x, y: edge }, b: { x: x + w, y: edge } };
   });
   const fade = (alpha: number) => (alpha < 1 ? { opacity: alpha } : undefined);
 
@@ -117,11 +118,11 @@ export function Shelf({ id, fr, x, w, planks, dy, books, tint, tintOn, backLines
       {ps.map((p) => p.seen && (
         <g style={fade(p.alpha)}>
           <path class="pl-face" d={poly(p.a, p.b, back(p.b), back(p.a))} />
-          {backLines && <path class="pl-back" d={`M${f(back(p.a).x)} ${f(back(p.a).y)}L${f(back(p.b).x)} ${f(back(p.b).y)}`} />}
+          <path class="pl-back" d={`M${f(back(p.a).x)} ${f(back(p.a).y)}L${f(back(p.b).x)} ${f(back(p.b).y)}`} />
         </g>
       ))}
       {books.map(({ spec, r, alpha = 1, scale = 1 }) => {
-        const book = <Book key={spec.key} eye={fr.eye} spec={spec} r={{ ...r, y: r.y - dy }} />;
+        const book = <Book key={spec.key} eye={fr.eye} spec={spec} flat={flat} r={{ ...r, y: r.y - dy }} />;
         if (alpha === 1 && scale === 1) return book;
         const cx = r.x + r.w / 2, cy = r.y - dy + r.h / 2;
         return (

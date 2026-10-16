@@ -8,13 +8,15 @@ import type { RefObject } from 'preact';
 
 const K = 700;      // spring stiffness (1/s²): a ~0.27s swing
 const ZETA = 0.45;  // damping ratio, under 1 so it overshoots (~20%)
-const GAIN = 20;    // wheel past an end kicks velocity, px/s per px of delta
+const GAIN = 20;    // wheel past an end kicks velocity, px/s per px of delta…
+const VMAX = 2400;  // …up to this, so a run of notches can't pile up
 const STEP = 1 / 240;
 
-interface Spring { o: number; v: number; to: number | null } // `to`: the end it's settling on
+// `to`: the end it's settling on; `dir`: which way the push that stretched it went
+interface Spring { o: number; v: number; to: number | null; dir: number }
 
 export function useShelfScroll(el: RefObject<HTMLElement>, count: number, active: number, min: number, max: number) {
-  const st = useRef<Spring[]>(Array.from({ length: count }, () => ({ o: 0, v: 0, to: null })));
+  const st = useRef<Spring[]>(Array.from({ length: count }, () => ({ o: 0, v: 0, to: null, dir: 0 })));
   const live = useRef({ active, min, max });
   live.current = { active, min, max };
   const kick = useRef(() => {});
@@ -42,7 +44,7 @@ export function useShelfScroll(el: RefObject<HTMLElement>, count: number, active
           s.v += (-K * (s.o - s.to) - c * s.v) * h;
           s.o += s.v * h;
         }
-        if (Math.abs(s.o - s.to) < 0.05 && Math.abs(s.v) < 2) { s.o = s.to; s.v = 0; s.to = null; }
+        if (Math.abs(s.o - s.to) < 0.05 && Math.abs(s.v) < 2) { s.o = s.to; s.v = 0; s.to = null; s.dir = 0; }
         else moving = true;
       });
       redraw((n) => n + 1);
@@ -53,19 +55,24 @@ export function useShelfScroll(el: RefObject<HTMLElement>, count: number, active
     };
     kick.current = start;
 
-    /** Move by `dy`: freely while inside the range, resisted past it (as velocity for a wheel, as position for a finger). */
+    /**
+     * Move by `dy`: freely while inside the range, resisted past it (as velocity
+     * for a wheel, as position for a finger). Coming back over the end clears
+     * whatever stretch had built up, so a push the other way starts from nothing.
+     */
     const push = (dy: number, wheel: boolean) => {
       const { active, min, max } = live.current;
       const s = st.current[active];
       if (dy > 0 && s.o < max) { const d = Math.min(dy, max - s.o); s.o += d; dy -= d; }
       else if (dy < 0 && s.o > min) { const d = Math.max(dy, min - s.o); s.o += d; dy -= d; }
+      if (!outside(s.o)) { s.to = null; s.v = 0; s.dir = 0; } // back in range by hand: it's yours again
       if (dy) {
+        // a fresh direction, or against the spring's return: rebuild from here, nothing carried over
+        if (s.dir !== Math.sign(dy) || s.v * dy < 0) { s.v = 0; s.dir = Math.sign(dy); }
         const give = (1 - Math.min(1, outside(s.o) / reach())) ** 2;
-        if (wheel) s.v += dy * give * GAIN;
+        if (wheel) s.v = Math.max(-VMAX, Math.min(VMAX, s.v + dy * give * GAIN));
         else s.o += dy * give;
         s.to = dy > 0 ? max : min;
-      } else if (!outside(s.o)) {
-        s.to = null; s.v = 0; // back in range by hand: it's yours again
       }
       start();
     };
