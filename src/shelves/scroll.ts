@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import type { RefObject } from 'preact';
 
 const STIFF = 1.6;  // resistance past the end: higher gives less
-const PULL = 24;    // ms time constant of the pull back: about as quick as the stretch, so it springs
+const PULL = 10;    // ms time constant of the pull back: about as quick as the stretch, so it springs
 
 const band = (x: number, give: number) => give * (1 - 1 / ((x / give) * STIFF + 1));
 
