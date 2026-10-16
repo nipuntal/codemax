@@ -288,9 +288,9 @@ pre.muted { margin: 4px 0 8px 22px; }
 .shelves { position: fixed; inset: 0; overflow: hidden; touch-action: none; overscroll-behavior: none; }
 .scene { display: block; shape-rendering: geometricPrecision; }
 .scene path, .scene circle, .scene ellipse { stroke-width: 1; stroke-linejoin: miter; }
-.rail { color: var(--line-strong); }
-.rail-back { color: var(--line); }
-.rail path, .rail-back path, .pl-z path { fill: none; }
+.rl-front { color: var(--line-strong); }
+.rl-back { color: var(--line); }
+.rl-front path, .rl-back path, .pl-z path { fill: none; }
 .pl-z { color: var(--line); }
 .pl-face { fill: var(--bg); }
 .pl-back { stroke: var(--line); }

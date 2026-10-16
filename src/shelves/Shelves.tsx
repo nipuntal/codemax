@@ -62,15 +62,16 @@ export function Shelves({ index }: { index: Index }) {
   });
   const left = place(l.cases[0].x, 1), right = place(l.cases[1].x, 2);
   const r = rails('home', l.cases, l.fr.eye, l.fr.top, l.height, l.reach);
+  const planks = Array.from({ length: SHELVES }, (_, row) => ({ y: plankY(l.fr, row) }));
 
   return (
     <div class="shelves" ref={root}>
       <svg class="scene" width={size.vw} height={size.vh}>
         <GlowFilter />
         {r.back}
-        <Shelf id="courses" fr={l.fr} {...l.cases[0]} rows={SHELVES} dy={dy[0]}
+        <Shelf id="courses" fr={l.fr} {...l.cases[0]} planks={planks} dy={dy[0]}
           books={index.courses.map((c, i) => ({ spec: courseBook(c, { on: c.id === course, onPick: () => pick(c.id) }), r: left(i) }))} />
-        <Shelf id="sets" fr={l.fr} {...l.cases[1]} rows={SHELVES} dy={dy[1]} empty="Select a course"
+        <Shelf id="sets" fr={l.fr} {...l.cases[1]} planks={planks} dy={dy[1]} empty="Select a course"
           books={selected ? setBooks(selected).map((spec, i) => ({ spec, r: right(i) })) : []} />
         {r.front}
       </svg>

@@ -89,41 +89,53 @@ function Book({ r, eye, spec }: { r: Rect; eye: P; spec: BookSpec }) {
 export interface Frame { eye: P; top: number; head: number; bh: number; pitch: number; plank: number }
 export const plankY = (fr: Frame, row: number) => fr.top + fr.head + fr.bh + row * fr.pitch;
 
+/** A plank at rest height `y`; a book at rest rect `r`. `alpha` fades one out, `scale` grows a book about its centre. */
+export interface PlankAt { y: number; alpha?: number }
+export interface BookAt { spec: BookSpec; r: Rect; alpha?: number; scale?: number }
+
 /**
- * One case's planks and books, scrolled up by `dy`. Book rects are where they
- * stand at rest. `tint` shades a run of rows from behind, to group them.
+ * One case's planks and books, scrolled up by `dy`. `tint` shades a band
+ * [top, bottom] from behind, to group what stands in it.
  */
-export function Shelf({ id, fr, x, w, rows, dy, books, tint, empty }: {
-  id: string; fr: Frame; x: number; w: number; rows: number; dy: number;
-  books: { spec: BookSpec; r: Rect }[]; tint?: [number, number]; empty?: string;
+export function Shelf({ id, fr, x, w, planks, dy, books, tint, empty }: {
+  id: string; fr: Frame; x: number; w: number; planks: PlankAt[]; dy: number;
+  books: BookAt[]; tint?: [number, number]; empty?: string;
 }) {
   const back = (p: P) => toward(p, fr.eye, DEPTH);
-  const planks = Array.from({ length: rows }, (_, row) => {
-    const y = plankY(fr, row) - dy;
+  const ps = planks.map(({ y: rest, alpha = 1 }) => {
+    const y = rest - dy;
     const above = fr.eye.y < y, below = fr.eye.y > y + fr.plank;
     const edge = above ? y : y + fr.plank; // the top face from above, the underside from below
-    return { y, seen: above || below, a: { x, y: edge }, b: { x: x + w, y: edge } };
+    return { y, alpha, seen: above || below, a: { x, y: edge }, b: { x: x + w, y: edge } };
   });
-  const tintTop = tint && plankY(fr, tint[0]) - dy - fr.bh - fr.head / 2;
-  const tintBottom = tint && plankY(fr, tint[1]) - dy + fr.plank;
+  const fade = (alpha: number) => (alpha < 1 ? { opacity: alpha } : undefined);
 
   return (
     <g>
-      {tint && <path class="sh-tint" d={`M${x} ${f(tintTop!)}h${w}V${f(tintBottom!)}h${-w}Z`} />}
+      {tint && <path class="sh-tint" d={`M${x} ${f(tint[0] - dy)}h${w}V${f(tint[1] - dy)}h${-w}Z`} />}
       {/* plank faces first: books stand in front of them */}
-      {planks.map((p) => p.seen && (
-        <g>
+      {ps.map((p) => p.seen && (
+        <g style={fade(p.alpha)}>
           <path class="pl-face" d={poly(p.a, p.b, back(p.b), back(p.a))} />
           <path class="pl-back" d={`M${f(back(p.a).x)} ${f(back(p.a).y)}L${f(back(p.b).x)} ${f(back(p.b).y)}`} />
         </g>
       ))}
-      {books.map(({ spec, r }) => <Book key={spec.key} eye={fr.eye} spec={spec} r={{ ...r, y: r.y - dy }} />)}
+      {books.map(({ spec, r, alpha = 1, scale = 1 }) => {
+        const book = <Book key={spec.key} eye={fr.eye} spec={spec} r={{ ...r, y: r.y - dy }} />;
+        if (alpha === 1 && scale === 1) return book;
+        const cx = r.x + r.w / 2, cy = r.y - dy + r.h / 2;
+        return (
+          <g key={spec.key} style={fade(alpha)} transform={`translate(${f(cx)} ${f(cy)}) scale(${scale.toFixed(4)}) translate(${f(-cx)} ${f(-cy)})`}>
+            {book}
+          </g>
+        );
+      })}
       {!books.length && empty && (
         <text class="cs-empty" x={x + 12} y={plankY(fr, 0) - dy - fr.bh / 2} font-size={11}>{empty}</text>
       )}
       {/* plank fronts cover the foot of the books; depth edges run on past the plank and fade */}
-      {planks.map((p, row) => (
-        <g>
+      {ps.map((p, row) => (
+        <g style={fade(p.alpha)}>
           <path class="pl-front" d={poly({ x, y: p.y }, { x: x + w, y: p.y }, { x: x + w, y: p.y + fr.plank }, { x, y: p.y + fr.plank })} />
           {p.seen && [p.a, p.b].map((q, k) => {
             const u = { x: back(q).x - q.x, y: back(q).y - q.y };
@@ -149,8 +161,8 @@ export function rails(id: string, cases: { x: number; w: number }[], eye: P, top
     return { key: `${id}-${i}-${k}`, a, b };
   }));
   return {
-    back: lines.map((l) => <Fade id={`rb-${l.key}`} a={back(l.a)} b={back(l.b)} solid={solid} cls="rail-back" />),
-    front: lines.map((l) => <Fade id={`rf-${l.key}`} a={l.a} b={l.b} solid={solid} cls="rail" />),
+    back: lines.map((l) => <Fade id={`rb-${l.key}`} a={back(l.a)} b={back(l.b)} solid={solid} cls="rl-back" />),
+    front: lines.map((l) => <Fade id={`rf-${l.key}`} a={l.a} b={l.b} solid={solid} cls="rl-front" />),
   };
 }
 
