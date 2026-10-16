@@ -97,9 +97,9 @@ export interface BookAt { spec: BookSpec; r: Rect; alpha?: number; scale?: numbe
  * One case's planks and books, scrolled up by `dy`. `tint` shades a band
  * [top, bottom] from behind, to group what stands in it.
  */
-export function Shelf({ id, fr, x, w, planks, dy, books, tint, empty }: {
+export function Shelf({ id, fr, x, w, planks, dy, books, tint, tintOn, backLines = true, empty }: {
   id: string; fr: Frame; x: number; w: number; planks: PlankAt[]; dy: number;
-  books: BookAt[]; tint?: [number, number]; empty?: string;
+  books: BookAt[]; tint?: [number, number]; tintOn?: boolean; backLines?: boolean; empty?: string;
 }) {
   const back = (p: P) => toward(p, fr.eye, DEPTH);
   const ps = planks.map(({ y: rest, alpha = 1 }) => {
@@ -112,12 +112,12 @@ export function Shelf({ id, fr, x, w, planks, dy, books, tint, empty }: {
 
   return (
     <g>
-      {tint && <path class="sh-tint" d={`M${x} ${f(tint[0] - dy)}h${w}V${f(tint[1] - dy)}h${-w}Z`} />}
+      {tint && <path class={`sh-tint${tintOn ? ' on' : ''}`} d={`M${x + 2} ${f(tint[0] - dy)}h${w - 4}V${f(tint[1] - dy)}h${4 - w}Z`} />}
       {/* plank faces first: books stand in front of them */}
       {ps.map((p) => p.seen && (
         <g style={fade(p.alpha)}>
           <path class="pl-face" d={poly(p.a, p.b, back(p.b), back(p.a))} />
-          <path class="pl-back" d={`M${f(back(p.a).x)} ${f(back(p.a).y)}L${f(back(p.b).x)} ${f(back(p.b).y)}`} />
+          {backLines && <path class="pl-back" d={`M${f(back(p.a).x)} ${f(back(p.a).y)}L${f(back(p.b).x)} ${f(back(p.b).y)}`} />}
         </g>
       ))}
       {books.map(({ spec, r, alpha = 1, scale = 1 }) => {

@@ -102,6 +102,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 /* ---------- rail: the bookshelf (shelves/Rail.tsx) ---------- */
 .rail { height: 100dvh; overflow: hidden; touch-action: none; }
 .sh-tint { fill: color-mix(in srgb, var(--text) 4%, transparent); }
+/* the open course's band glows, like a book, when the course itself is selected */
+.sh-tint.on { stroke: var(--text); stroke-width: 1.5; filter: url(#glow); }
 
 /* ---------- list ---------- */
 .list { overflow-y: auto; border-right: 1px solid var(--border); padding: 0 8px 24px; overscroll-behavior: contain; }
