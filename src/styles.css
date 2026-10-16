@@ -63,7 +63,7 @@
   --selection: color-mix(in srgb, var(--text) 20%, transparent);
   --selection-match: color-mix(in srgb, var(--text) 10%, transparent);
   /* bars that content scrolls under: translucent and blurred, nothing more */
-  --glass: color-mix(in srgb, var(--bg) 76%, transparent);
+  --glass: color-mix(in srgb, var(--bg) 53%, transparent);
 }
 .glass, .list-head, .toolbar, .files, .output-head {
   background: var(--glass);

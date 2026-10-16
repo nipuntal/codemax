@@ -40,11 +40,12 @@ export interface BookSpec {
   key: string; title: string; sub: string; meta: string;
   art?: (x: number, y: number, s: number) => preact.JSX.Element; // the cover's icon (not drawn on plain books)
   href?: string; onPick?: () => void; on?: boolean;
+  icon?: boolean; // a plain book shows its art, centred, in place of its title
 }
 
 /**
  * A book: a box showing its front, and its top and inner side when the eye can
- * see them. `plain`: just the front and its title.
+ * see them. `plain`: just the front and its title (lowercase), or its icon.
  */
 function Book({ r, eye, spec, plain }: { r: Rect; eye: P; spec: BookSpec; plain?: boolean }) {
   const tl = { x: r.x, y: r.y }, tr = { x: r.x + r.w, y: r.y }, br = { x: r.x + r.w, y: r.y + r.h }, bl = { x: r.x, y: r.y + r.h };
@@ -69,8 +70,10 @@ function Book({ r, eye, spec, plain }: { r: Rect; eye: P; spec: BookSpec; plain?
       <path class="bk-glow" d={front} />
       {faces.map((d) => <path class="bk-side" d={d} />)}
       <path class="bk-front" d={front} />
-      {plain ? (
-        <text class="bk-title" x={r.x + 9} y={r.y + 9 + title * 0.8} font-size={title}>{spec.title}</text>
+      {plain && spec.icon ? (
+        spec.art?.(r.x + (r.w - r.h * 0.6) / 2, r.y + r.h * 0.17, r.h * 0.6)
+      ) : plain ? (
+        <text class="bk-title" x={r.x + 9} y={r.y + 9 + title * 0.8} font-size={title}>{spec.title.toLowerCase()}</text>
       ) : (
         <>
           <clipPath id={clip}><path d={front} /></clipPath>
