@@ -5,19 +5,24 @@ import { setDraft, setStatus, getPref, setPref } from './store';
 import { Output, type OutputState } from './Output';
 import * as runner from './runner/client';
 import * as Icon from './icons';
+import { navigate } from './router';
 
-/** Difficulty out of five, as slanted bars lit up to the level. */
+/** Difficulty out of three, as slanted bars lit up to the level. */
 export const Level = ({ n }: { n: number | null }) => (n ? (
-  <span class="level" role="img" aria-label={`difficulty ${n} of 5`}>
-    {[1, 2, 3, 4, 5].map((k) => <i class={k <= n ? 'on' : undefined} />)}
+  <span class="level" role="img" aria-label={`difficulty ${n} of 3`}>
+    {[1, 2, 3].map((k) => <i class={k <= n ? 'on' : undefined} />)}
   </span>
 ) : null);
 
 // The Run command each question was last given (this session only).
 const commands = new Map<string, string>();
+const MOD = /Mac|iP/.test(navigator.platform) ? '⌘' : 'Ctrl ';
+const ADVANCE_MS = 900; // a beat to see it pass before moving on
+
 const jobOf = (q: Question): runner.Job => ({ path: q.path, answer: { name: q.answer.name, text: answerText(q) }, files: q.files, tests: q.tests });
 
-export function Detail({ path, crumb, backHref }: { path: string; crumb: string; backHref: string }) {
+/** `next`: the question after this one in the list, moved on to once every test passes. */
+export function Detail({ path, crumb, backHref, next }: { path: string; crumb: string; backHref: string; next: string | null }) {
   const [q, setQ] = useState<Question | null>(null);
   const [failed, setFailed] = useState(false);
   const [doc, setDoc] = useState('readme');
@@ -28,6 +33,10 @@ export function Detail({ path, crumb, backHref }: { path: string; crumb: string;
   const [sol, setSol] = useState<Solution | null>(null);
   const shown = useRef(path); // the question on screen, so late results don't land on another
   shown.current = path;
+  const nextRef = useRef(next);
+  nextRef.current = next;
+  const advance = useRef(0);
+  useEffect(() => () => clearTimeout(advance.current), [path]);
 
   useEffect(() => {
     let live = true;
@@ -59,6 +68,7 @@ export function Detail({ path, crumb, backHref }: { path: string; crumb: string;
 
   const go = async (kind: 'run' | 'test') => {
     if (!q) return;
+    clearTimeout(advance.current); // asked for something else: stay
     if (out?.busy) return runner.stop();
     const forPath = q.path;
     const land = (o: OutputState) => shown.current === forPath && setOut(o);
@@ -72,8 +82,11 @@ export function Detail({ path, crumb, backHref }: { path: string; crumb: string;
       } else {
         setOut({ kind: 'test', busy: true });
         const results = await runner.test(jobOf(q), status);
-        setStatus(q.path, results.every((r) => r.pass) ? 2 : 1);
-        land({ kind: 'test', busy: false, results });
+        const passed = results.every((r) => r.pass);
+        setStatus(q.path, passed ? 2 : 1);
+        const to = passed && shown.current === forPath ? nextRef.current : null;
+        land({ kind: 'test', busy: false, results, next: !!to });
+        if (to) advance.current = setTimeout(() => shown.current === forPath && navigate(`/${to}`), ADVANCE_MS);
       }
     } catch (e) {
       land({ kind, busy: false, error: (e as Error).message } as OutputState);
@@ -124,11 +137,13 @@ export function Detail({ path, crumb, backHref }: { path: string; crumb: string;
         <a class="tb-back" href={backHref} aria-label="Back to list"><Icon.Back /></a>
         <div class="crumb label">{crumb}</div>
         <div class="tb-group" onPointerEnter={warmHeavy}>
-          <button class="tb-btn" onClick={() => go('run')} disabled={busy === 'test'} title="Run (⌘↵)">
+          <button class="tb-btn" onClick={() => go('run')} disabled={busy === 'test'} title={`Run (${MOD}↵)`}>
             {busy === 'run' ? <><Icon.Stop size={16} /><span>Stop</span></> : <><Icon.Play size={16} /><span>Run</span></>}
+            <kbd>{MOD}↵</kbd>
           </button>
-          <button class="tb-btn primary" onClick={() => go('test')} disabled={busy === 'run'} title="Test (⌘⇧↵)">
+          <button class="tb-btn primary" onClick={() => go('test')} disabled={busy === 'run'} title={`Test (${MOD}⇧↵)`}>
             {busy === 'test' ? <><Icon.Stop size={16} /><span>Stop</span></> : <><Icon.Check size={16} /><span>Test</span></>}
+            <kbd>{MOD}⇧↵</kbd>
           </button>
         </div>
         <div class="tb-group">
@@ -177,7 +192,7 @@ export function Detail({ path, crumb, backHref }: { path: string; crumb: string;
           <Editor q={q} file={file || q.answer.name} epoch={epoch} />
           {out && (
             <Output state={out} command={command} onCommand={setCommand}
-              onRun={() => go('run')} onClose={() => { if (out.busy) runner.stop(); setOut(null); }} />
+              onRun={() => go('run')} onClose={() => { clearTimeout(advance.current); if (out.busy) runner.stop(); setOut(null); }} />
           )}
         </section>
       </Split>

@@ -5,13 +5,15 @@
 // symmetrical, without the back-plane lines, and with flat books: just their
 // fronts (their depth is too busy at this size). The planks keep theirs.
 // Clicking the open course folds its sets away behind it, one by one; clicking
-// it again unfolds them.
+// it again unfolds them. A small tile above Home tucks the whole rail away.
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import type { Index } from '../data';
 import { useShelfScroll } from './scroll';
 import { GlowFilter, Shelf, courseBook, rails, setBooks, type BookAt, type BookSpec, type Frame } from './draw';
 import { Home } from './covers';
+import * as Icon from '../icons';
 
+const TOP = 22;         // the case starts here, leaving room for the toggle above Home
 const SET_SCALE = 0.84; // sets are a little smaller than their course
 const FOLD_MS = 150;    // each set's fold into (or out of) its course…
 const STAGGER = 55;     // …starting this long after the one above it
@@ -21,7 +23,9 @@ const easeOut = (t: number) => 1 - (1 - t) ** 3;
 /** The course's small swell as a set arrives in it. */
 const swell = (p: number) => 0.05 * Math.sin(Math.PI * clamp01((p - 0.6) / 0.4));
 
-export function Rail({ index, course, set }: { index: Index; course?: string; set?: string }) {
+export function Rail({ index, course, set, open, onToggle }: {
+  index: Index; course?: string; set?: string; open: boolean; onToggle: () => void;
+}) {
   const root = useRef<HTMLDivElement>(null);
   const [box, setBox] = useState({ w: 0, h: 0, y: 0, vh: 0 });
   useLayoutEffect(() => {
@@ -82,7 +86,7 @@ export function Rail({ index, course, set }: { index: Index; course?: string; se
   const plank = Math.max(4, Math.round(bw * 0.045));
   const head = Math.round(bh * 0.2);
   const pitch = head + bh + plank;
-  const fr: Frame = { eye: { x: box.w / 2, y: box.vh / 2 - box.y }, top: 12, head, bh, pitch, plank };
+  const fr: Frame = { eye: { x: box.w / 2, y: box.vh / 2 - box.y }, top: TOP, head, bh, pitch, plank };
 
   // stack the shelves: a folding set's shelf shrinks to nothing, so it sinks into the one above
   let y = fr.top + head + bh - pitch;
@@ -108,9 +112,17 @@ export function Rail({ index, course, set }: { index: Index; course?: string; se
     ? [group[0].y - bh - head / 2, group[group.length - 1].y + plank] : undefined;
   const r = rails('rail', [{ x: 0.5, w: box.w - 1 }], fr.eye, fr.top, height, 48);
 
+  // the toggle sits in the first shelf's headroom, over Home's left edge, and scrolls with it
+  const railBtn = (
+    <button class="rail-btn" onClick={onToggle} aria-expanded={open} title={open ? 'Hide shelf' : 'Show shelf'}
+      style={open ? { left: side, transform: `translateY(${(-dy).toFixed(1)}px)` } : undefined}>
+      <Icon.Panel size={14} />
+    </button>
+  );
   return (
-    <nav class="rail" ref={root} aria-label="Courses">
-      {box.w > 0 && (
+    <nav class={`rail${open ? '' : ' closed'}`} ref={root} aria-label="Courses">
+      {railBtn}
+      {open && box.w > 0 && (
         <svg class="scene" width={box.w} height={box.h}>
           <GlowFilter />
           <Shelf id="rail" fr={fr} x={0.5} w={box.w - 1} dy={dy} tint={tint} tintOn={!set} books={books} backLines={false} flatBooks

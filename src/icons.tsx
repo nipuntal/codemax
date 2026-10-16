@@ -13,4 +13,5 @@ export const Reset = I(<><path d="M4 10a6 6 0 1 0 1.8-4.3" /><path d="M4 3.5v3h3
 export const Bulb = I(<><path d="M7.5 14.5h5M8.5 17h3" /><path d="M10 3a5 5 0 0 0-3 9c.6.5 1 1.1 1 1.8v.7h4v-.7c0-.7.4-1.3 1-1.8A5 5 0 0 0 10 3z" /></>);
 export const Back = I(<path d="M12 5l-5 5 5 5" />);
 export const Pencil = I(<><path d="M12.5 4.5l3 3-8.5 8.5H4v-3z" /></>);
+export const Panel = I(<><rect x="3" y="4" width="14" height="12" /><path d="M8 4v12" /></>);
 export const Close = I(<path d="M5.5 5.5l9 9M14.5 5.5l-9 9" />);

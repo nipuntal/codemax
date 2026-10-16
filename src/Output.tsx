@@ -3,7 +3,7 @@ import * as Icon from './icons';
 
 export type OutputState =
   | { kind: 'run'; busy: boolean; status?: string; result?: RunResult; error?: string }
-  | { kind: 'test'; busy: boolean; status?: string; results?: CaseResult[]; error?: string };
+  | { kind: 'test'; busy: boolean; status?: string; results?: CaseResult[]; error?: string; next?: boolean };
 
 const MAX_LINES = 400;
 const clip = (s: string) => {
@@ -31,7 +31,7 @@ export function Output({ state, command, onCommand, onRun, onClose }: {
           </form>
         ) : (
           <span class={`verdict label${state.results ? (passed === total ? ' pass' : ' fail') : ''}`}>
-            {state.busy ? 'Testing…' : state.results ? `${passed} of ${total} passed` : 'Test'}
+            {state.busy ? 'Testing…' : state.results ? `${passed} of ${total} passed${state.next ? ' · next question' : ''}` : 'Test'}
           </span>
         )}
         <button class="tb-icon small" onClick={onClose} aria-label="Close output"><Icon.Close size={14} /></button>

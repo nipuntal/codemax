@@ -69,7 +69,9 @@ function parseHead(md) {
     const kind = h1.split('·')[1];
     tag = kind ? kind.trim() : null;
   }
-  const stars = (head.match(/[⭐★]/gu) || []).length || null;
+  // sources rate out of five (☆ pads 3311's); shown out of three: 1 | 2–3 | 4–5
+  const rated = (head.match(/[⭐★]/gu) || []).length;
+  const stars = rated ? Math.ceil((Math.min(rated, 5) * 3) / 5) : null;
   const mins = +(head.match(/(\d+)\s*min/) || [])[1] || null;
   const format = (head.match(/Format:\s*\*\*([^*]+)\*\*/) || [])[1];
   return { title, tag: format || tag, stars, mins };

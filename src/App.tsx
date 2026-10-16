@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { loadIndex, scopeFor, type Index, type Scope } from './data';
 import { navigate, usePath } from './router';
-import { useProgress } from './store';
+import { getPref, setPref, useProgress } from './store';
 import { List } from './List';
 import { Detail } from './Detail';
 import { Shelves } from './shelves/Shelves';
@@ -12,6 +12,8 @@ export function App() {
   const progress = useProgress();
   const [index, setIndex] = useState<Index | null>(null);
   const lastScope = useRef<Scope | null>(null);
+  const [railOpen, setRailOpen] = useState(() => getPref('rail', true));
+  const toggleRail = () => setRailOpen((o) => (setPref('rail', !o), !o));
 
   useEffect(() => void loadIndex().then(setIndex), []);
 
@@ -28,7 +30,9 @@ export function App() {
     if (scope) lastScope.current = scope;
   }
   const items = scope ? scope.groups.flatMap((g) => g.items) : [];
-  const current = items.find((i) => i.path === qpath);
+  const at = items.findIndex((i) => i.path === qpath);
+  const current = items[at];
+  const next = at >= 0 ? items[at + 1]?.path ?? null : null;
   // "Day 1 · Python · Q5": name the question's own group, not the list's.
   const home = qpath && index ? scopeFor(index, segs.slice(0, -1)) : null;
   const crumb = home ? `${home.title} · Q${segs[segs.length - 1]}` : '';
@@ -55,14 +59,14 @@ export function App() {
   if (path === '/') return <Shelves index={index} />;
 
   return (
-    <div class="app" data-view={qpath ? 'detail' : 'list'}>
-      <Rail index={index} course={segs[0]} set={segs[1]} />
+    <div class={`app${railOpen ? '' : ' rail-closed'}`} data-view={qpath ? 'detail' : 'list'}>
+      <Rail index={index} course={segs[0]} set={segs[1]} open={railOpen} onToggle={toggleRail} />
       {scope
         ? <List scope={scope} active={qpath} progress={progress} />
         : <section class="list"><div class="empty label">Nothing here</div></section>}
       <main class="detail">
         {qpath && scope
-          ? <Detail path={qpath} crumb={crumb} backHref={`/${scope.key}`} />
+          ? <Detail path={qpath} crumb={crumb} backHref={`/${scope.key}`} next={next} />
           : <div class="empty label">{scope ? 'Pick a question' : 'Not found'}</div>}
       </main>
     </div>
