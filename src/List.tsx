@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { count, prefetch, type Scope } from './data';
 import type { Status } from './store';
-import { Stars } from './Detail';
+import { Level } from './Detail';
 
 const LANG = { shell: 'Shell', python: 'Python', sql: 'SQL', text: 'Text' } as const;
 
@@ -24,12 +24,12 @@ export function List({ scope, active, progress }: {
       <header class="list-head">
         <div>
           <h1>{scope.title}</h1>
-          <p>{scope.subtitle} · {count(scope.groups)} questions</p>
+          <p class="label">{scope.subtitle} · {count(scope.groups)} questions</p>
         </div>
       </header>
       {scope.groups.map((g) => (
         <>
-          {scope.groups.length > 1 && <h2 class="group">{g.title}</h2>}
+          {scope.groups.length > 1 && <h2 class="group label">{g.title}</h2>}
           {g.items.map((q) => {
             const s = progress[q.path] ?? 0;
             return (
@@ -38,12 +38,12 @@ export function List({ scope, active, progress }: {
                 <span class={`dot s${s}`} aria-label={s === 2 ? 'passed' : s === 1 ? 'started' : undefined} />
                 <div class="card-top">
                   <strong>{q.title}</strong>
-                  <span class="qn">Q{q.n}</span>
+                  <span class="qn label">Q{q.n}</span>
                 </div>
                 <div class="card-sub">
                   <span>{q.tag ?? LANG[q.lang]}</span>
-                  <Stars n={q.stars} />
-                  {q.mins && <span class="mins">{q.mins} min</span>}
+                  <Level n={q.stars} />
+                  {q.mins && <span class="mins label">{q.mins} min</span>}
                 </div>
                 <p class="card-prev">{q.preview}</p>
               </a>

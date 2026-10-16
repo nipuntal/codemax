@@ -59,11 +59,11 @@ export function App() {
       <Rail index={index} course={segs[0]} set={segs[1]} />
       {scope
         ? <List scope={scope} active={qpath} progress={progress} />
-        : <section class="list"><div class="empty">Nothing here.</div></section>}
+        : <section class="list"><div class="empty label">Nothing here</div></section>}
       <main class="detail">
         {qpath && scope
           ? <Detail path={qpath} crumb={crumb} backHref={`/${scope.key}`} />
-          : <div class="empty">{scope ? 'Pick a question' : 'Not found'}</div>}
+          : <div class="empty label">{scope ? 'Pick a question' : 'Not found'}</div>}
       </main>
     </div>
   );

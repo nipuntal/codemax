@@ -2,8 +2,8 @@
 // each course on its own shelf; the open course's sets stand on the shelves
 // beneath it, a little smaller and shaded from behind as a group. Drawn like the
 // landing shelves, but with the eye on the rail's own centre line so it's
-// symmetrical, and flat: books are just their fronts, planks just their edges
-// (depth is too busy at this size).
+// symmetrical, without the back-plane lines, and with flat books: just their
+// fronts (their depth is too busy at this size). The planks keep theirs.
 // Clicking the open course folds its sets away behind it, one by one; clicking
 // it again unfolds them.
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
@@ -113,7 +113,7 @@ export function Rail({ index, course, set }: { index: Index; course?: string; se
       {box.w > 0 && (
         <svg class="scene" width={box.w} height={box.h}>
           <GlowFilter />
-          <Shelf id="rail" fr={fr} x={0.5} w={box.w - 1} dy={dy} tint={tint} tintOn={!set} books={books} flat
+          <Shelf id="rail" fr={fr} x={0.5} w={box.w - 1} dy={dy} tint={tint} tintOn={!set} books={books} backLines={false} flatBooks
             planks={placed.map(({ p, y: py }) => ({ y: py, alpha: 1 - Math.min(1, p * 3) }))} />
           {r.front}
         </svg>

@@ -6,8 +6,12 @@ import { Output, type OutputState } from './Output';
 import * as runner from './runner/client';
 import * as Icon from './icons';
 
-const Stars = ({ n }: { n: number | null }) => (n ? <span class="stars" aria-label={`difficulty ${n} of 5`}>{'★'.repeat(n)}<i>{'★'.repeat(Math.max(0, 5 - n))}</i></span> : null);
-export { Stars };
+/** Difficulty out of five, as slanted bars lit up to the level. */
+export const Level = ({ n }: { n: number | null }) => (n ? (
+  <span class="level" role="img" aria-label={`difficulty ${n} of 5`}>
+    {[1, 2, 3, 4, 5].map((k) => <i class={k <= n ? 'on' : undefined} />)}
+  </span>
+) : null);
 
 // The Run command each question was last given (this session only).
 const commands = new Map<string, string>();
@@ -90,7 +94,7 @@ export function Detail({ path, crumb, backHref }: { path: string; crumb: string;
     return () => removeEventListener('keydown', key, true);
   }, []);
 
-  if (failed) return <div class="empty">Couldn’t load this question.</div>;
+  if (failed) return <div class="empty label">Couldn’t load this question</div>;
   if (!q) return <div class="detail-loading" />;
   const stale = q.path !== path;
 
@@ -118,7 +122,7 @@ export function Detail({ path, crumb, backHref }: { path: string; crumb: string;
     <div class={`detail-inner${stale ? ' stale' : ''}`}>
       <header class="toolbar">
         <a class="tb-back" href={backHref} aria-label="Back to list"><Icon.Back /></a>
-        <div class="crumb">{crumb}</div>
+        <div class="crumb label">{crumb}</div>
         <div class="tb-group" onPointerEnter={warmHeavy}>
           <button class="tb-btn" onClick={() => go('run')} disabled={busy === 'test'} title="Run (⌘↵)">
             {busy === 'run' ? <><Icon.Stop size={16} /><span>Stop</span></> : <><Icon.Play size={16} /><span>Run</span></>}
@@ -138,10 +142,10 @@ export function Detail({ path, crumb, backHref }: { path: string; crumb: string;
           <div class="doc-head">
             <h1>{q.title}</h1>
             <div class="chips">
-              {q.tag && <span class="chip">{q.tag}</span>}
-              <span class="chip mono">{q.answer.name}</span>
-              <Stars n={q.stars} />
-              {q.mins && <span class="chip ghost">{q.mins} min</span>}
+              {q.tag && <span class="chip label">{q.tag}</span>}
+              <span class="chip label mono">{q.answer.name}</span>
+              {q.mins && <span class="chip label ghost">{q.mins} min</span>}
+              <Level n={q.stars} />
             </div>
             {docs.length > 1 && (
               <nav class="seg" role="tablist">

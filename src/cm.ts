@@ -32,11 +32,11 @@ const highlight = HighlightStyle.define([
 const theme = EditorView.theme({
   '&': { height: '100%', fontSize: '13px', backgroundColor: 'transparent', color: 'var(--text)' },
   '.cm-scroller': { fontFamily: 'var(--mono)', lineHeight: '1.6' },
-  '.cm-content': { padding: '12px 0', caretColor: 'var(--accent)' },
+  '.cm-content': { padding: '12px 0', caretColor: 'var(--text)' },
   '.cm-gutters': { backgroundColor: 'transparent', border: 'none', color: 'var(--text-3)' },
   '.cm-lineNumbers .cm-gutterElement': { padding: '0 12px 0 16px', minWidth: '40px' },
   '.cm-activeLine, .cm-activeLineGutter': { backgroundColor: 'var(--line-active)' },
-  '.cm-cursor': { borderLeftColor: 'var(--accent)', borderLeftWidth: '2px' },
+  '.cm-cursor': { borderLeftColor: 'var(--text)', borderLeftWidth: '2px' },
   '&.cm-focused': { outline: 'none' },
   '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection': { backgroundColor: 'var(--selection) !important' },
   '.cm-matchingBracket': { backgroundColor: 'var(--line-active)', outline: '1px solid var(--border)' },

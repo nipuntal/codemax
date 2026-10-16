@@ -30,7 +30,7 @@ export function Output({ state, command, onCommand, onRun, onClose }: {
               autocomplete="off" autocapitalize="off" aria-label="Command to run" />
           </form>
         ) : (
-          <span class={`verdict${state.results ? (passed === total ? ' pass' : ' fail') : ''}`}>
+          <span class={`verdict label${state.results ? (passed === total ? ' pass' : ' fail') : ''}`}>
             {state.busy ? 'Testing…' : state.results ? `${passed} of ${total} passed` : 'Test'}
           </span>
         )}
@@ -88,7 +88,7 @@ function Diff({ want, got }: { want: string; got: string }) {
   }
   return (
     <div class="diff">
-      <div class="legend"><span class="minus">− expected</span><span class="plus">+ yours</span></div>
+      <div class="legend label"><span class="minus">− expected</span><span class="plus">+ yours</span></div>
       <pre>{rows.map(([k, l]) => <div class={k === '+' ? 'plus' : k === '−' ? 'minus' : ''}>{k} {l || ' '}</div>)}</pre>
     </div>
   );

@@ -95,19 +95,19 @@ export interface BookAt { spec: BookSpec; r: Rect; alpha?: number; scale?: numbe
 
 /**
  * One case's planks and books, scrolled up by `dy`. `tint` shades a band
- * [top, bottom] from behind, to group what stands in it. `flat` drops the
- * depth: no plank faces or depth edges, and books are just their fronts.
+ * [top, bottom] from behind, to group what stands in it. `flatBooks` draws
+ * books as just their fronts; the planks keep their depth either way.
  */
-export function Shelf({ id, fr, x, w, planks, dy, books, tint, tintOn, flat, empty }: {
+export function Shelf({ id, fr, x, w, planks, dy, books, tint, tintOn, backLines = true, flatBooks, empty }: {
   id: string; fr: Frame; x: number; w: number; planks: PlankAt[]; dy: number;
-  books: BookAt[]; tint?: [number, number]; tintOn?: boolean; flat?: boolean; empty?: string;
+  books: BookAt[]; tint?: [number, number]; tintOn?: boolean; backLines?: boolean; flatBooks?: boolean; empty?: string;
 }) {
   const back = (p: P) => toward(p, fr.eye, DEPTH);
   const ps = planks.map(({ y: rest, alpha = 1 }) => {
     const y = rest - dy;
     const above = fr.eye.y < y, below = fr.eye.y > y + fr.plank;
     const edge = above ? y : y + fr.plank; // the top face from above, the underside from below
-    return { y, alpha, seen: !flat && (above || below), a: { x, y: edge }, b: { x: x + w, y: edge } };
+    return { y, alpha, seen: above || below, a: { x, y: edge }, b: { x: x + w, y: edge } };
   });
   const fade = (alpha: number) => (alpha < 1 ? { opacity: alpha } : undefined);
 
@@ -118,11 +118,11 @@ export function Shelf({ id, fr, x, w, planks, dy, books, tint, tintOn, flat, emp
       {ps.map((p) => p.seen && (
         <g style={fade(p.alpha)}>
           <path class="pl-face" d={poly(p.a, p.b, back(p.b), back(p.a))} />
-          <path class="pl-back" d={`M${f(back(p.a).x)} ${f(back(p.a).y)}L${f(back(p.b).x)} ${f(back(p.b).y)}`} />
+          {backLines && <path class="pl-back" d={`M${f(back(p.a).x)} ${f(back(p.a).y)}L${f(back(p.b).x)} ${f(back(p.b).y)}`} />}
         </g>
       ))}
       {books.map(({ spec, r, alpha = 1, scale = 1 }) => {
-        const book = <Book key={spec.key} eye={fr.eye} spec={spec} flat={flat} r={{ ...r, y: r.y - dy }} />;
+        const book = <Book key={spec.key} eye={fr.eye} spec={spec} flat={flatBooks} r={{ ...r, y: r.y - dy }} />;
         if (alpha === 1 && scale === 1) return book;
         const cx = r.x + r.w / 2, cy = r.y - dy + r.h / 2;
         return (
