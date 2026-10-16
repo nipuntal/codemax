@@ -91,9 +91,8 @@ export function Rail({ index, course, set }: { index: Index; course?: string; se
     return { row, p, y };
   });
   const height = y + plank - fr.top;
-  // whatever doesn't fit, plus a quarter shelf of give at either end
-  const give = Math.round(pitch / 4);
-  const [dy] = useShelfScroll(root, 1, 0, -give, Math.max(0, fr.top + height + 12 - box.h) + give);
+  // whatever doesn't fit; past either end it stretches and springs back
+  const [dy] = useShelfScroll(root, 1, 0, 0, Math.max(0, fr.top + height + 12 - box.h));
 
   // sets shrink as they fold; the course swells a little as each one reaches it
   const books: BookAt[] = placed.map(({ row, p, y: py }, i) => {

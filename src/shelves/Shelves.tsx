@@ -1,6 +1,7 @@
 // The way in: two bookcases side by side at 1:2. Courses stand one per shelf
 // on the left; picking one fills the right with its sets, two per shelf. Only
-// the case for the step you're on scrolls (half a shelf); the other stays put.
+// the case for the step you're on scrolls; it only stretches and springs back,
+// since everything fits.
 import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 import type { Index } from '../data';
 import { getPref, setPref } from '../store';
@@ -28,7 +29,6 @@ function layout(vw: number, vh: number) {
     fr, bw, side, height,
     cases: [{ x: left, w: narrow }, { x: left + narrow + gap, w: narrow * 2 }],
     reach: Math.round(Math.max(40, Math.min(height * 0.5, ((vh - height) / 2) * 0.85))),
-    give: Math.round(pitch * 0.25), // a quarter shelf of scroll each way
   };
 }
 
@@ -48,7 +48,7 @@ export function Shelves({ index }: { index: Index }) {
   }, []);
 
   const l = size.vw ? layout(size.vw, size.vh) : null;
-  const dy = useShelfScroll(root, 2, selected ? 1 : 0, -(l?.give ?? 0), l?.give ?? 0);
+  const dy = useShelfScroll(root, 2, selected ? 1 : 0, 0, 0);
   if (!l) return <div class="shelves" ref={root} />;
 
   const pick = (id: string) => {
