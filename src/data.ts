@@ -10,11 +10,8 @@ export interface Summary {
   path: string;
   n: number;
   title: string;
-  tag: string | null;
-  stars: number | null;
+  stars: number | null; // difficulty, 1–3
   mins: number | null;
-  lang: Lang;
-  preview: string;
 }
 export interface Group { id: string | null; title: string | null; items: Summary[] }
 export interface QSet { id: string; title: string; blurb: string; groups: Group[] }
@@ -25,7 +22,6 @@ export interface Doc { id: string; title: string; html: string }
 export interface Question {
   path: string;
   title: string;
-  tag: string | null;
   stars: number | null;
   mins: number | null;
   lang: Lang;
@@ -71,8 +67,8 @@ export function scopeFor(index: Index, segs: string[]): Scope | null {
   const set = course.sets.find((s) => s.id === segs[1]);
   if (!set) return null;
   const group = segs[2] && set.groups.find((g) => g.id === segs[2]);
-  if (group) return { key: `${course.id}/${set.id}/${group.id}`, title: `${set.title} · ${group.title}`, subtitle: `${course.title} · ${set.blurb}`, groups: [group] };
-  return { key: `${course.id}/${set.id}`, title: set.title, subtitle: `${course.title} · ${set.blurb}`, groups: set.groups };
+  if (group) return { key: `${course.id}/${set.id}/${group.id}`, title: `${set.title} · ${group.title}`, subtitle: set.blurb, groups: [group] };
+  return { key: `${course.id}/${set.id}`, title: set.title, subtitle: set.blurb, groups: set.groups };
 }
 
 export const count = (groups: Group[]) => groups.reduce((n, g) => n + g.items.length, 0);

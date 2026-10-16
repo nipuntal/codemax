@@ -5,7 +5,7 @@ import { getPref, setPref, useProgress } from './store';
 import { List } from './List';
 import { Detail } from './Detail';
 import { Shelves } from './shelves/Shelves';
-import { Rail } from './shelves/Rail';
+import { Rail, RailToggle } from './shelves/Rail';
 
 export function App() {
   const path = usePath();
@@ -33,9 +33,10 @@ export function App() {
   const at = items.findIndex((i) => i.path === qpath);
   const current = items[at];
   const next = at >= 0 ? items[at + 1]?.path ?? null : null;
-  // "Day 1 · Python · Q5": name the question's own group, not the list's.
+  // "COMP2041 · Day 1 · Python · Q5": name the question's own group, not the list's.
   const home = qpath && index ? scopeFor(index, segs.slice(0, -1)) : null;
-  const crumb = home ? `${home.title} · Q${segs[segs.length - 1]}` : '';
+  const course = index?.courses.find((c) => c.id === segs[0]);
+  const crumb = home && course ? `${course.title} · ${home.title} · Q${segs[segs.length - 1]}` : '';
 
   useEffect(() => {
     document.title = current ? `${current.title} · codemax` : scope ? `${scope.title} · codemax` : 'codemax';
@@ -56,14 +57,16 @@ export function App() {
   }, [items, qpath]);
 
   if (!index) return <div class="app booting" />;
+  // while the rail is hidden, its toggle stands before the list's title
+  const lead = !railOpen && <RailToggle open={false} onToggle={toggleRail} />;
   if (path === '/') return <Shelves index={index} />;
 
   return (
     <div class={`app${railOpen ? '' : ' rail-closed'}`} data-view={qpath ? 'detail' : 'list'}>
-      <Rail index={index} course={segs[0]} set={segs[1]} open={railOpen} onToggle={toggleRail} />
+      {railOpen && <Rail index={index} course={segs[0]} set={segs[1]} onToggle={toggleRail} />}
       {scope
-        ? <List scope={scope} active={qpath} progress={progress} />
-        : <section class="list"><div class="empty label">Nothing here</div></section>}
+        ? <List scope={scope} active={qpath} progress={progress} lead={lead} />
+        : <section class="list">{lead && <header class="list-head">{lead}</header>}<div class="empty label">Nothing here</div></section>}
       <main class="detail">
         {qpath && scope
           ? <Detail path={qpath} crumb={crumb} backHref={`/${scope.key}`} next={next} />

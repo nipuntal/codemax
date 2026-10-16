@@ -90,57 +90,60 @@ button { font: inherit; color: inherit; background: none; border: 0; border-radi
 
 /* ---------- rail: the bookshelf (shelves/Rail.tsx) ---------- */
 .rail { position: relative; height: 100dvh; overflow: hidden; touch-action: none; }
-.app.rail-closed { --sb-w: 52px; }
-/* a small tile over Home's left edge, outlined like the books */
+.app.rail-closed { grid-template-columns: var(--list-w) minmax(0, 1fr); }
+/* a small tile, outlined like the books: over Home's left edge, or before the list's title.
+   Its top (20px) is the same in both places, so it doesn't jump when toggled. */
 .rail-btn {
-  position: absolute; top: 22px; left: 12px; z-index: 1;
-  display: grid; place-items: center; width: 28px; height: 18px;
+  flex: none; display: grid; place-items: center; width: 32px; height: 24px;
   background: var(--bg); border: 1px solid var(--line); color: var(--text-2);
 }
 .rail-btn:hover { border-color: var(--text); color: var(--text); }
+.rail-top { position: absolute; top: 20px; left: 0; z-index: 1; }
+.rail-top .rail-btn { position: absolute; top: 0; }
 .sh-tint { fill: color-mix(in srgb, var(--text) 4%, transparent); }
 /* the open course's band glows, like a book, when the course itself is selected */
 .sh-tint.on { stroke: var(--text); stroke-width: 1.5; filter: url(#glow); }
 
 /* ---------- list ---------- */
 .list { overflow-y: auto; border-left: 1px solid var(--border); border-right: 1px solid var(--border); padding: 0 0 24px; overscroll-behavior: contain; }
+.rail-closed .list { border-left: 0; }
 .list-head {
   position: sticky; top: 0; z-index: 2;
   height: 64px; padding: 0 16px;
-  display: flex; flex-direction: column; justify-content: center; gap: 3px;
+  display: flex; align-items: center; gap: 12px;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
-.list-head h1 { margin: 0; font-size: 15px; font-weight: 650; letter-spacing: 0.01em; }
-.list-head p { margin: 0; }
+.list-head > div { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.list-head h1 { margin: 0; font-size: 15px; font-weight: 650; letter-spacing: 0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.list-head p { margin: 0; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .group { display: flex; align-items: center; gap: 10px; margin: 0; padding: 18px 16px 8px; }
 .group::after { content: ""; flex: 1; border-top: 1px solid var(--border); }
 
 .card {
   position: relative; display: block;
-  padding: 12px 16px 13px 30px;
+  padding: 12px 16px 12px 30px;
   border-bottom: 1px solid var(--border);
-  content-visibility: auto; contain-intrinsic-size: auto 96px;
+  content-visibility: auto; contain-intrinsic-size: auto 60px;
 }
 .card:hover { background: var(--hover); }
-/* selected: a lit tile, outlined like a book on the shelf */
-.card[aria-current] { background: var(--fill); outline: 1px solid var(--text); outline-offset: -1px; z-index: 1; }
+/* selected: a lit tile, outlined like a book on the shelf. The outline lies on
+   its own bottom edge; the edge above it steps aside so the two don't double up. */
+.card[aria-current] { background: var(--fill); outline: 1px solid var(--text); outline-offset: -1px; }
+:has(+ .card[aria-current]) { border-bottom-color: transparent; }
 /* progress: a hollow square once started, filled when every test passes */
 .dot { position: absolute; left: 13px; top: 18px; width: 7px; height: 7px; }
 .dot.s1 { border: 1px solid var(--text-2); }
 .dot.s2 { background: var(--ok); }
 .card-top { display: flex; align-items: baseline; gap: 8px; }
 .card-top strong { flex: 1; font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-sub { display: flex; gap: 10px; align-items: center; margin-top: 3px; font-size: 12px; color: var(--text-2); }
+.card-sub { display: flex; align-items: center; margin-top: 4px; }
 .card-sub .mins { margin-left: auto; }
-.card-prev {
-  margin: 5px 0 0; font-size: 12.5px; color: var(--text-2);
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-}
-/* difficulty: three slanted bars, lit up to the level */
-.level { display: inline-flex; gap: 2px; padding: 0 2px; }
-.level i { width: 2px; height: 9px; background: currentColor; opacity: 0.22; transform: skewX(-22deg); }
-.level i.on { opacity: 1; }
+/* difficulty: three slanted bars lit up to the level, then its name */
+.level { display: inline-flex; align-items: center; gap: 8px; color: var(--text-2); }
+.bars { display: inline-flex; gap: 2px; padding: 0 1px; }
+.bars i { width: 2px; height: 9px; background: currentColor; opacity: 0.3; transform: skewX(-22deg); }
+.bars i.on { opacity: 1; background: var(--text); }
 
 /* ---------- detail ---------- */
 .detail { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
@@ -159,7 +162,14 @@ button { font: inherit; color: inherit; background: none; border: 0; border-radi
 /* the one lit cell */
 .tb-btn.primary { background: var(--text); color: var(--bg); }
 .tb-btn.primary:hover { background: color-mix(in srgb, var(--text) 86%, var(--bg)); }
-.tb-btn kbd { margin-left: 3px; font: 500 10.5px var(--mono); letter-spacing: 0.04em; opacity: 0.5; }
+/* shortcuts: one key per square, drawn in the button's own colour */
+.keys { display: inline-flex; gap: 2px; margin-left: 4px; }
+.keys kbd {
+  display: grid; place-items: center; min-width: 17px; height: 17px; padding: 0 3px;
+  font: 500 10px/1 var(--sans); letter-spacing: 0.02em;
+  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+  color: color-mix(in srgb, currentColor 62%, transparent);
+}
 .tb-btn:disabled { opacity: 0.35; cursor: default; }
 .tb-btn:disabled:hover { background: none; }
 .tb-btn.primary:disabled:hover { background: var(--text); }
@@ -184,10 +194,7 @@ button { font: inherit; color: inherit; background: none; border: 0; border-radi
 .doc { min-width: 0; overflow-y: auto; padding: 0 28px 48px; overscroll-behavior: contain; }
 .doc-head { padding: 28px 0 8px; }
 .doc-head h1 { margin: 0 0 12px; font-size: 26px; line-height: 1.15; font-weight: 700; letter-spacing: -0.02em; }
-.chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--text-2); }
-.chip { padding: 3px 8px 2px; border: 1px solid var(--border); color: var(--text-2); }
-.chip.mono { text-transform: none; letter-spacing: 0; font-size: 11.5px; }
-.chip.ghost { border-color: transparent; padding: 3px 2px 2px; }
+.meta { display: flex; align-items: center; gap: 16px; }
 /* tabs: a row of tiles, the open one lit */
 .seg { display: inline-flex; margin-top: 18px; border: 1px solid var(--border); }
 .seg button { padding: 6px 16px; color: var(--text-2); font-weight: 500; }
@@ -235,7 +242,7 @@ button { font: inherit; color: inherit; background: none; border: 0; border-radi
 }
 .file:hover { color: var(--text); background: var(--hover); }
 .file.on { background: var(--bg); color: var(--text); }
-.file.on::before { content: ""; position: absolute; left: -1px; right: 0; top: 0; border-top: 1px solid var(--text); }
+.file.on::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--text); }
 .file.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; border-bottom: 1px solid var(--bg); }
 .editor { flex: 1; min-height: 0; background: var(--bg); }
 .output { flex: none; height: 42%; min-height: 120px; display: flex; flex-direction: column; border-top: 1px solid var(--border); background: var(--bg); }
@@ -271,13 +278,13 @@ pre.muted { margin: 4px 0 8px 22px; }
 /* ---------- smaller screens ---------- */
 @media (max-width: 760px) {
   :root { --list-w: 100%; }
-  .app { grid-template-columns: 100%; }
+  .app, .app.rail-closed { grid-template-columns: 100%; }
   .app .rail { display: none; }
   .list { border-left: 0; border-right: 0; }
   .app[data-view="detail"] .list, .app[data-view="list"] .detail { display: none; }
   .toolbar { padding: 0 12px 0 8px; height: 56px; }
   .tb-back { display: grid; place-items: center; width: 34px; height: 34px; }
-  .tb-btn span, .tb-btn kbd { display: none; }
+  .tb-btn span, .keys, .rail-btn { display: none; }
   .tb-btn { padding: 0 11px; }
   .split { flex-direction: column; }
   .split > .doc { flex: 0 0 calc(var(--split) * 100%); padding: 0 16px 24px; }

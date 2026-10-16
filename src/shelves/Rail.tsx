@@ -5,7 +5,8 @@
 // symmetrical, without the back-plane lines, and with flat books: just their
 // fronts (their depth is too busy at this size). The planks keep theirs.
 // Clicking the open course folds its sets away behind it, one by one; clicking
-// it again unfolds them. A small tile above Home tucks the whole rail away.
+// it again unfolds them. A small tile above Home tucks the whole rail away;
+// while it's hidden, the same tile stands before the list's title.
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import type { Index } from '../data';
 import { useShelfScroll } from './scroll';
@@ -13,7 +14,7 @@ import { GlowFilter, Shelf, courseBook, rails, setBooks, type BookAt, type BookS
 import { Home } from './covers';
 import * as Icon from '../icons';
 
-const TOP = 22;         // the case starts here, leaving room for the toggle above Home
+const TOP = 28;         // the case starts here, leaving room for the toggle above Home
 const SET_SCALE = 0.84; // sets are a little smaller than their course
 const FOLD_MS = 150;    // each set's fold into (or out of) its course…
 const STAGGER = 55;     // …starting this long after the one above it
@@ -23,9 +24,15 @@ const easeOut = (t: number) => 1 - (1 - t) ** 3;
 /** The course's small swell as a set arrives in it. */
 const swell = (p: number) => 0.05 * Math.sin(Math.PI * clamp01((p - 0.6) / 0.4));
 
-export function Rail({ index, course, set, open, onToggle }: {
-  index: Index; course?: string; set?: string; open: boolean; onToggle: () => void;
-}) {
+/** Hides or shows the rail. */
+export const RailToggle = ({ open, onToggle, left }: { open: boolean; onToggle: () => void; left?: number }) => (
+  <button class="rail-btn" onClick={onToggle} aria-expanded={open} title={open ? 'Hide shelf' : 'Show shelf'}
+    style={left === undefined ? undefined : { left }}>
+    <Icon.Panel size={15} />
+  </button>
+);
+
+export function Rail({ index, course, set, onToggle }: { index: Index; course?: string; set?: string; onToggle: () => void }) {
   const root = useRef<HTMLDivElement>(null);
   const [box, setBox] = useState({ w: 0, h: 0, y: 0, vh: 0 });
   useLayoutEffect(() => {
@@ -112,17 +119,13 @@ export function Rail({ index, course, set, open, onToggle }: {
     ? [group[0].y - bh - head / 2, group[group.length - 1].y + plank] : undefined;
   const r = rails('rail', [{ x: 0.5, w: box.w - 1 }], fr.eye, fr.top, height, 48);
 
-  // the toggle sits in the first shelf's headroom, over Home's left edge, and scrolls with it
-  const railBtn = (
-    <button class="rail-btn" onClick={onToggle} aria-expanded={open} title={open ? 'Hide shelf' : 'Show shelf'}
-      style={open ? { left: side, transform: `translateY(${(-dy).toFixed(1)}px)` } : undefined}>
-      <Icon.Panel size={14} />
-    </button>
-  );
   return (
-    <nav class={`rail${open ? '' : ' closed'}`} ref={root} aria-label="Courses">
-      {railBtn}
-      {open && box.w > 0 && (
+    <nav class="rail" ref={root} aria-label="Courses">
+      {/* the toggle sits in the first shelf's headroom, over Home's left edge, and scrolls with it */}
+      <div class="rail-top" style={{ transform: `translateY(${(-dy).toFixed(1)}px)` }}>
+        <RailToggle open onToggle={onToggle} left={side} />
+      </div>
+      {box.w > 0 && (
         <svg class="scene" width={box.w} height={box.h}>
           <GlowFilter />
           <Shelf id="rail" fr={fr} x={0.5} w={box.w - 1} dy={dy} tint={tint} tintOn={!set} books={books} backLines={false} flatBooks

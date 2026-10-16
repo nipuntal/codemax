@@ -3,10 +3,9 @@ import { count, prefetch, type Scope } from './data';
 import type { Status } from './store';
 import { Level } from './Detail';
 
-const LANG = { shell: 'Shell', python: 'Python', sql: 'SQL', text: 'Text' } as const;
-
-export function List({ scope, active, progress }: {
-  scope: Scope; active: string | null; progress: Record<string, Status>;
+/** `lead`: something to stand before the title (the rail's toggle, while the rail is hidden). */
+export function List({ scope, active, progress, lead }: {
+  scope: Scope; active: string | null; progress: Record<string, Status>; lead?: preact.ComponentChildren;
 }) {
   const box = useRef<HTMLDivElement>(null);
   // Keep the selected card in view: centred on a deep link, nudged on ↑/↓.
@@ -22,6 +21,7 @@ export function List({ scope, active, progress }: {
   return (
     <section class="list" ref={box}>
       <header class="list-head">
+        {lead}
         <div>
           <h1>{scope.title}</h1>
           <p class="label">{scope.subtitle} · {count(scope.groups)} questions</p>
@@ -40,12 +40,12 @@ export function List({ scope, active, progress }: {
                   <strong>{q.title}</strong>
                   <span class="qn label">Q{q.n}</span>
                 </div>
-                <div class="card-sub">
-                  <span>{q.tag ?? LANG[q.lang]}</span>
-                  <Level n={q.stars} />
-                  {q.mins && <span class="mins label">{q.mins} min</span>}
-                </div>
-                <p class="card-prev">{q.preview}</p>
+                {(q.stars || q.mins) && (
+                  <div class="card-sub">
+                    <Level n={q.stars} />
+                    {q.mins && <span class="mins label">{q.mins} min</span>}
+                  </div>
+                )}
               </a>
             );
           })}

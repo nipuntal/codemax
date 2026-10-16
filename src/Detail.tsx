@@ -7,16 +7,21 @@ import * as runner from './runner/client';
 import * as Icon from './icons';
 import { navigate } from './router';
 
-/** Difficulty out of three, as slanted bars lit up to the level. */
+const LEVELS = ['Easy', 'Medium', 'Hard'];
+/** Difficulty (1–3): slanted bars lit up to the level, then its name. */
 export const Level = ({ n }: { n: number | null }) => (n ? (
-  <span class="level" role="img" aria-label={`difficulty ${n} of 3`}>
-    {[1, 2, 3].map((k) => <i class={k <= n ? 'on' : undefined} />)}
+  <span class="level label">
+    <span class="bars" aria-hidden="true">{LEVELS.map((_, k) => <i class={k < n ? 'on' : undefined} />)}</span>
+    {LEVELS[n - 1]}
   </span>
 ) : null);
 
+/** A shortcut, one key per square. */
+const Keys = ({ k }: { k: string[] }) => <span class="keys" aria-hidden="true">{k.map((x) => <kbd>{x}</kbd>)}</span>;
+
 // The Run command each question was last given (this session only).
 const commands = new Map<string, string>();
-const MOD = /Mac|iP/.test(navigator.platform) ? '⌘' : 'Ctrl ';
+const MOD = /Mac|iP/.test(navigator.platform) ? '⌘' : 'Ctrl';
 const ADVANCE_MS = 900; // a beat to see it pass before moving on
 
 const jobOf = (q: Question): runner.Job => ({ path: q.path, answer: { name: q.answer.name, text: answerText(q) }, files: q.files, tests: q.tests });
@@ -137,13 +142,13 @@ export function Detail({ path, crumb, backHref, next }: { path: string; crumb: s
         <a class="tb-back" href={backHref} aria-label="Back to list"><Icon.Back /></a>
         <div class="crumb label">{crumb}</div>
         <div class="tb-group" onPointerEnter={warmHeavy}>
-          <button class="tb-btn" onClick={() => go('run')} disabled={busy === 'test'} title={`Run (${MOD}↵)`}>
+          <button class="tb-btn" onClick={() => go('run')} disabled={busy === 'test'} title={`Run (${MOD} ↵)`}>
             {busy === 'run' ? <><Icon.Stop size={16} /><span>Stop</span></> : <><Icon.Play size={16} /><span>Run</span></>}
-            <kbd>{MOD}↵</kbd>
+            <Keys k={[MOD, '↵']} />
           </button>
-          <button class="tb-btn primary" onClick={() => go('test')} disabled={busy === 'run'} title={`Test (${MOD}⇧↵)`}>
+          <button class="tb-btn primary" onClick={() => go('test')} disabled={busy === 'run'} title={`Test (${MOD} ⇧ ↵)`}>
             {busy === 'test' ? <><Icon.Stop size={16} /><span>Stop</span></> : <><Icon.Check size={16} /><span>Test</span></>}
-            <kbd>{MOD}⇧↵</kbd>
+            <Keys k={[MOD, '⇧', '↵']} />
           </button>
         </div>
         <div class="tb-group">
@@ -156,12 +161,12 @@ export function Detail({ path, crumb, backHref, next }: { path: string; crumb: s
         <article class="doc">
           <div class="doc-head">
             <h1>{q.title}</h1>
-            <div class="chips">
-              {q.tag && <span class="chip label">{q.tag}</span>}
-              <span class="chip label mono">{q.answer.name}</span>
-              {q.mins && <span class="chip label ghost">{q.mins} min</span>}
-              <Level n={q.stars} />
-            </div>
+            {(q.stars || q.mins) && (
+              <div class="meta">
+                <Level n={q.stars} />
+                {q.mins && <span class="label">{q.mins} min</span>}
+              </div>
+            )}
             {docs.length > 1 && (
               <nav class="seg" role="tablist">
                 {docs.map((d) => (

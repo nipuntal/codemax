@@ -55,38 +55,19 @@ function parseHead(md) {
   const lines = md.split('\n');
   const h1 = decode((lines.find((l) => l.startsWith('# ')) || '# ?').slice(2)).trim();
   const head = decode(lines.slice(0, 8).join('\n'));
-  let title = h1, tag = null;
+  let title = h1;
   const dash = h1.match(/—\s*(.+)$/);
-  if (dash) {
-    const parts = dash[1].split(/\s{2,}·\s{2,}|\s{2,}(?=\()/);
-    title = parts[0].trim();
-    const t = (parts.slice(1).find((p) => /^[\[(]/.test(p.trim())) || '').replace(/[\[\]()]/g, '').trim();
-    tag = t || null;
-  } else {
+  if (dash) title = dash[1].split(/\s{2,}·\s{2,}|\s{2,}(?=\()/)[0].trim();
+  else {
     // 3311: the h1 is a label, the h2 is the title
     const h2 = lines.find((l) => l.startsWith('## '));
     title = h2 ? decode(h2.slice(3)).trim() : h1;
-    const kind = h1.split('·')[1];
-    tag = kind ? kind.trim() : null;
   }
   // sources rate out of five (☆ pads 3311's); shown out of three: 1 | 2–3 | 4–5
   const rated = (head.match(/[⭐★]/gu) || []).length;
   const stars = rated ? Math.ceil((Math.min(rated, 5) * 3) / 5) : null;
   const mins = +(head.match(/(\d+)\s*min/) || [])[1] || null;
-  const format = (head.match(/Format:\s*\*\*([^*]+)\*\*/) || [])[1];
-  return { title, tag: format || tag, stars, mins };
-}
-
-// The first real sentence of the task, as plain text, for the list preview.
-function preview(md) {
-  const task = md.split(/^## +THE TASK\s*$/m)[1] ?? md;
-  const paras = task.replace(/```[\s\S]*?```/g, '').split(/\n\s*\n/);
-  for (const p of paras) {
-    const t = p.trim();
-    if (!t || /^(#|>|\||---|<|\*\*Difficulty|\*\*Target|-|\*\s|\d+\.)/.test(t)) continue;
-    return decode(t).replace(/<[^>]+>/g, '').replace(/[*_`]/g, '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/\s+/g, ' ').slice(0, 220);
-  }
-  return '';
+  return { title, stars, mins };
 }
 
 // Drop the heading block that the UI shows itself (h1, 3311's h2, the meta line).
@@ -215,12 +196,12 @@ function buildQuestion(dir, qid, urlPath) {
   };
 
   const q = {
-    path: urlPath, ...meta, lang: LANG[ext],
+    path: urlPath, title: meta.title, stars: meta.stars, mins: meta.mins, lang: LANG[ext],
     answer: { name: answer, text: read(path.join(dir, answer)) },
     docs, files, tests,
     run: runHint(readme, answer, tests),
   };
-  const summary = { path: urlPath, n: +qid.slice(1), title: meta.title, tag: meta.tag, stars: meta.stars, mins: meta.mins, lang: LANG[ext], preview: preview(readme) };
+  const summary = { path: urlPath, n: +qid.slice(1), title: meta.title, stars: meta.stars, mins: meta.mins };
   return { q, solution, summary };
 }
 
