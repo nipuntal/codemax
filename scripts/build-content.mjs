@@ -257,7 +257,8 @@ for (const c of COURSES) {
   index.courses.push(course);
 }
 emit('index.json', index);
-fs.writeFileSync(path.join(OUT, '3311/classes.sql'), dumpToSql(read(path.join(SRC, '3311/db/classes.dump'))));
+// .txt so the host compresses it (it skips .sql)
+fs.writeFileSync(path.join(OUT, '3311/classes.txt'), dumpToSql(read(path.join(SRC, '3311/db/classes.dump'))));
 console.log(`content: ${count} questions, ${(bytes / 1024 / 1024).toFixed(1)} MB written to public/c`);
 
 // Pyodide's runtime files, served from a versioned path so they can be cached forever.

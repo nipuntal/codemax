@@ -10,7 +10,7 @@ import { configurePg, ensurePg } from '../src/runner/pg';
 import { test, type Job } from '../src/runner/engine';
 
 const C = path.resolve('public/c');
-configurePg(async () => ({ PGlite, sql: fs.readFileSync(path.join(C, '3311/classes.sql'), 'utf8') }));
+configurePg(async () => ({ PGlite, sql: fs.readFileSync(path.join(C, '3311/classes.txt'), 'utf8') }));
 configurePy(() => loadPyodide(), ensurePg);
 
 const prefix = process.argv[2] ?? '';

@@ -30,7 +30,7 @@ const loadPy = () => loading('Loading Python (first run only)…', async () => {
 const loadPg = () => loading('Loading Postgres (first run only)…', async () => {
   const [{ PGlite }, sql] = await Promise.all([
     import('@electric-sql/pglite'),
-    fetch('/c/3311/classes.sql').then((r) => r.text()),
+    fetch('/c/3311/classes.txt').then((r) => r.text()),
   ]);
   return { PGlite, sql };
 });
