@@ -10,9 +10,14 @@ export function List({ scope, active, progress, sidebarOpen, onToggleSidebar }: 
   scope: Scope; active: string | null; progress: Record<string, Status>; sidebarOpen: boolean; onToggleSidebar: () => void;
 }) {
   const box = useRef<HTMLDivElement>(null);
-  // Keep the selected card in view when it changes from the keyboard.
+  // Keep the selected card in view: centred on a deep link, nudged on ↑/↓.
+  // Waits a frame so the first layout has settled.
+  const first = useRef(true);
   useEffect(() => {
-    box.current?.querySelector('[aria-current]')?.scrollIntoView({ block: 'nearest' });
+    const block = first.current ? 'center' : 'nearest';
+    first.current = false;
+    const id = requestAnimationFrame(() => box.current?.querySelector('[aria-current]')?.scrollIntoView({ block }));
+    return () => cancelAnimationFrame(id);
   }, [active]);
 
   return (
