@@ -5,6 +5,7 @@ import { getPref, setPref, useProgress } from './store';
 import { Sidebar } from './Sidebar';
 import { List } from './List';
 import { Detail } from './Detail';
+import { Shelves } from './Shelves';
 
 export function App() {
   const path = usePath();
@@ -14,9 +15,6 @@ export function App() {
   const lastScope = useRef<Scope | null>(null);
 
   useEffect(() => void loadIndex().then(setIndex), []);
-  useEffect(() => {
-    if (path === '/') navigate('/2041/day1', true);
-  }, [path]);
 
   const toggleSidebar = () => {
     setSidebar(!sidebar);
@@ -60,6 +58,7 @@ export function App() {
   }, [items, qpath]);
 
   if (!index) return <div class="app booting" />;
+  if (path === '/') return <Shelves index={index} />;
 
   return (
     <div class="app" data-sidebar={sidebar ? 'open' : 'closed'} data-view={qpath ? 'detail' : 'list'}>

@@ -308,3 +308,54 @@ pre.muted { margin: 4px 0 8px 22px; }
   .gutter::after { inset: -6px 0; }
   .doc-head h1 { font-size: 22px; }
 }
+
+/* ---------- landing: two wireframe bookcases ---------- */
+.shelves {
+  height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  --line: color-mix(in srgb, var(--text) 26%, transparent);
+  --line-strong: color-mix(in srgb, var(--text) 62%, transparent);
+}
+.shelves-head {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; align-items: baseline; justify-content: space-between;
+  max-width: 920px; margin: 0 auto; padding: 22px 20px 14px;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+.shelves-hint { font: 11px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
+.cases {
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 5vw, 64px);
+  max-width: 920px; margin: 0 auto; padding: 8px 20px 64px;
+}
+.case-label {
+  margin: 0 0 10px; font: 600 11px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3);
+}
+.case-box { position: relative; }
+.case-svg { display: block; overflow: visible; shape-rendering: geometricPrecision; }
+.case-svg path { stroke-width: 1; stroke-linejoin: miter; }
+.cs-frame { fill: var(--bg); stroke: var(--line-strong); }
+.cs-back { fill: none; stroke: var(--line); }
+.cs-wall { fill: none; stroke: var(--line); }
+.cs-plank { fill: var(--bg); stroke: var(--line-strong); }
+.cs-plank-face { fill: var(--bg); stroke: var(--line); }
+.cs-empty { font: 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; fill: var(--text-3); }
+
+.bk { cursor: pointer; outline: none; animation: bk-in 260ms cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i) * 45ms); }
+@keyframes bk-in { from { opacity: 0; transform: translateY(8px); } }
+.bk-face { fill: var(--bg); stroke: var(--line-strong); }
+.bk-front { fill: var(--bg); stroke: var(--line-strong); transition: stroke 120ms; }
+.bk text { pointer-events: none; transition: fill 120ms; }
+.bk-kicker { font: 600 10px var(--mono); letter-spacing: 0.16em; fill: var(--text-3); }
+.bk-title { font: 650 34px/1 var(--sans); letter-spacing: -0.02em; fill: var(--text); }
+.bk-line { font: 500 11.5px var(--sans); fill: var(--text-2); }
+.bk-meta { font: 11px var(--mono); fill: var(--text-3); }
+.bk:hover .bk-front, .bk:focus-visible .bk-front, .bk:hover .bk-face, .bk:focus-visible .bk-face { stroke: var(--text); }
+.bk.on .bk-front, .bk.on .bk-face { stroke: var(--accent); }
+.bk.on .bk-kicker, .bk.on .bk-title { fill: var(--accent); }
+@media (prefers-reduced-motion: reduce) { .bk { animation: none; } }
+@media (max-width: 560px) {
+  .cases { padding-inline: 12px; }
+  .bk-title { font-size: 28px; }
+}
