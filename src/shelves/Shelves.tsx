@@ -11,7 +11,7 @@ import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { count, type Course, type Index } from '../data';
 import { getPref, setPref } from '../store';
 import { rubber, useRubberScroll } from './scroll';
-import { Database, Plates, Terminal } from './covers';
+import { Database, Sheets, Terminal } from './covers';
 
 interface P { x: number; y: number }
 interface Rect { x: number; y: number; w: number; h: number }
@@ -42,7 +42,7 @@ function layout(vw: number, vh: number) {
     cases: [{ x: left, w: narrow, perShelf: 1 }, { x: left + narrow + gap, w: narrow * 2, perShelf: 2 }],
     reach: Math.round(Math.max(40, Math.min(height * 0.5, ((vh - height) / 2) * 0.85))), // rails past the case
     max: Math.round(pitch * 0.55),   // how far the active case scrolls
-    give: Math.round(vh * 0.2),      // how far it can overshoot
+    give: Math.round(vh * 0.05),     // the most it can overshoot
   };
 }
 type L = ReturnType<typeof layout>;
@@ -69,7 +69,7 @@ function Fade({ id, a, b, solid, cls }: { id: string; a: P; b: P; solid: number;
 
 interface BookSpec {
   key: string; title: string; sub: string; meta: string;
-  art: (cx: number, cy: number, s: number) => preact.JSX.Element;
+  art: (x: number, y: number, s: number) => preact.JSX.Element;
   href?: string; onPick?: () => void; on?: boolean;
 }
 
@@ -84,13 +84,13 @@ function Book({ r, eye, spec }: { r: Rect; eye: P; spec: BookSpec }) {
   ].filter(Boolean) as string[];
   const front = poly(tl, tr, br, bl);
 
-  // cover: title and sub-line top-left, the illustration in the middle, the count at the foot
+  // cover: title, sub-line and count top-left; a large icon owns the bottom-right
   const pad = Math.round(r.w * 0.09);
   const title = Math.max(11, Math.round(r.w * 0.098));
   const small = Math.max(9, Math.round(r.w * 0.064));
-  const artTop = r.y + pad + title + small * 1.6;
-  const artBottom = r.y + r.h - pad - small * 1.4;
-  const s = Math.min(r.w - pad * 2, artBottom - artTop) * 0.82;
+  // the icon sits large in the bottom-right corner, running off the edge, cropped by the cover
+  const s = r.w * 0.8;
+  const clip = `clip-${spec.key.replace(/\W/g, '-')}`;
 
   const body = (
     <>
@@ -99,8 +99,9 @@ function Book({ r, eye, spec }: { r: Rect; eye: P; spec: BookSpec }) {
       <path class="bk-front" d={front} />
       <text class="bk-title" x={r.x + pad} y={r.y + pad + title * 0.8} font-size={title}>{spec.title}</text>
       <text class="bk-sub" x={r.x + pad} y={r.y + pad + title * 0.8 + small * 1.5} font-size={small}>{spec.sub}</text>
-      {spec.art(r.x + r.w / 2, (artTop + artBottom) / 2, s)}
-      <text class="bk-meta" x={r.x + pad} y={r.y + r.h - pad} font-size={small}>{spec.meta}</text>
+      <clipPath id={clip}><path d={front} /></clipPath>
+      <g clip-path={`url(#${clip})`}>{spec.art(r.x + r.w - s * 0.86, r.y + r.h - s * 0.8, s)}</g>
+      <text class="bk-meta" x={r.x + pad} y={r.y + pad + title * 0.8 + small * 2.9} font-size={small}>{spec.meta}</text>
     </>
   );
   const cls = `bk${spec.on ? ' on' : ''}`;
@@ -167,13 +168,13 @@ const setsOf = (c: Course): BookSpec[] =>
     title: s.title,
     sub: s.groups.length > 1 ? s.groups.map((g) => g.title).join(' · ') : s.blurb,
     meta: `${count(s.groups)} questions`,
-    art: (cx, cy, sz) => <Plates cx={cx} cy={cy} s={sz} n={i + 1} />,
+    art: (x, y, sz) => <Sheets x={x} y={y} s={sz} n={i + 1} />,
     href: `/${c.id}/${s.id}`,
   }));
 
 const ART: Record<string, BookSpec['art']> = {
-  '2041': (cx, cy, s) => <Terminal cx={cx} cy={cy} s={s} />,
-  '3311': (cx, cy, s) => <Database cx={cx} cy={cy} s={s} />,
+  '2041': (x, y, s) => <Terminal x={x} y={y} s={s} />,
+  '3311': (x, y, s) => <Database x={x} y={y} s={s} />,
 };
 
 export function Shelves({ index }: { index: Index }) {
@@ -210,7 +211,7 @@ export function Shelves({ index }: { index: Index }) {
     <div class="shelves" ref={root}>
       {l && (
         <svg class="scene" width={size.vw} height={size.vh}>
-          <filter id="glow" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="3" /></filter>
+          <filter id="glow" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="6" /></filter>
           {(() => {
             const back = (p: P) => toward(p, l.eye, DEPTH);
             const solid = l.height / (l.height + l.reach * 2);
