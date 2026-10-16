@@ -19,7 +19,7 @@ export function List({ scope, active, progress, lead }: {
   }, [active]);
 
   return (
-    <section class="list" ref={box}>
+    <section class="list">
       <header class="list-head">
         {lead}
         <div>
@@ -27,30 +27,32 @@ export function List({ scope, active, progress, lead }: {
           <p class="label">{scope.subtitle} · {count(scope.groups)} questions</p>
         </div>
       </header>
-      {scope.groups.map((g) => (
-        <>
-          {scope.groups.length > 1 && <h2 class="group label">{g.title}</h2>}
-          {g.items.map((q) => {
-            const s = progress[q.path] ?? 0;
-            return (
-              <a href={`/${q.path}`} class="card" aria-current={q.path === active ? 'true' : undefined}
-                onMouseEnter={() => prefetch(q.path)} onFocus={() => prefetch(q.path)} onTouchStart={() => prefetch(q.path)}>
-                <span class={`dot s${s}`} aria-label={s === 2 ? 'passed' : s === 1 ? 'started' : undefined} />
-                <div class="card-top">
-                  <strong>{q.title}</strong>
-                  <span class="qn label">Q{q.n}</span>
-                </div>
-                {(q.stars || q.mins) && (
-                  <div class="card-sub">
-                    <Level n={q.stars} />
-                    {q.mins && <span class="mins label">{q.mins} min</span>}
+      <div class="list-body" ref={box}>
+        {scope.groups.map((g) => (
+          <>
+            {scope.groups.length > 1 && <h2 class="group label">{g.title}</h2>}
+            {g.items.map((q) => {
+              const s = progress[q.path] ?? 0;
+              return (
+                <a href={`/${q.path}`} class="card" aria-current={q.path === active ? 'true' : undefined}
+                  onMouseEnter={() => prefetch(q.path)} onFocus={() => prefetch(q.path)} onTouchStart={() => prefetch(q.path)}>
+                  <span class={`dot s${s}`} aria-label={s === 2 ? 'passed' : s === 1 ? 'started' : undefined} />
+                  <div class="card-top">
+                    <strong>{q.title}</strong>
+                    <span class="qn label">Q{q.n}</span>
                   </div>
-                )}
-              </a>
-            );
-          })}
-        </>
-      ))}
+                  {(q.stars || q.mins) && (
+                    <div class="card-sub">
+                      <Level n={q.stars} />
+                      {q.mins && <span class="mins label">{q.mins} min</span>}
+                    </div>
+                  )}
+                </a>
+              );
+            })}
+          </>
+        ))}
+      </div>
     </section>
   );
 }

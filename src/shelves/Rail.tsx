@@ -1,20 +1,21 @@
 // The app's left rail: one narrow bookcase, a book per shelf. Home first, then
 // each course on its own shelf; the open course's sets stand on the shelves
 // beneath it, a little smaller and shaded from behind as a group. Drawn like the
-// landing shelves, but with the eye on the rail's own centre line so it's
-// symmetrical, without the back-plane lines, and with flat books: just their
-// fronts (their depth is too busy at this size). The planks keep theirs.
+// landing shelves, but quieter: the eye on the rail's own centre line so it's
+// symmetrical, no uprights or depth edges, and small plain books (a titled
+// front each). The planks keep their depth.
 // Clicking the open course folds its sets away behind it, one by one; clicking
 // it again unfolds them. A small tile above Home tucks the whole rail away;
 // while it's hidden, the same tile stands before the list's title.
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import type { Index } from '../data';
 import { useShelfScroll } from './scroll';
-import { GlowFilter, Shelf, courseBook, rails, setBooks, type BookAt, type BookSpec, type Frame } from './draw';
-import { Home } from './covers';
+import { GlowFilter, Shelf, courseBook, setBooks, type BookAt, type BookSpec, type Frame } from './draw';
 import * as Icon from '../icons';
 
-const TOP = 28;         // the case starts here, leaving room for the toggle above Home
+const INSET = 14;       // the toggle's (and every book's) distance from the rail's edges
+const HEAD = 16;        // headroom above each book
+const TOP = INSET + 36 + 12 - HEAD; // the case starts here: the toggle (36 tall), a gap, then Home
 const SET_SCALE = 0.84; // sets are a little smaller than their course
 const FOLD_MS = 150;    // each set's fold into (or out of) its course…
 const STAGGER = 55;     // …starting this long after the one above it
@@ -71,7 +72,7 @@ export function Rail({ index, course, set, onToggle }: { index: Index; course?: 
 
   // one book per shelf: each course, then (under the open one) its sets
   type Row = { spec: BookSpec; small: boolean; k?: number }; // k: which set under the course
-  const rows: Row[] = [{ spec: { key: 'home', title: 'Home', sub: 'All courses', meta: '', href: '/', art: (x, y, sz) => <Home x={x} y={y} s={sz} /> }, small: false }];
+  const rows: Row[] = [{ spec: { key: 'home', title: 'Home', sub: '', meta: '', href: '/' }, small: false }];
   let parent = -1;
   for (const c of index.courses) {
     const open = c.id === course;
@@ -87,11 +88,11 @@ export function Rail({ index, course, set, onToggle }: { index: Index; course?: 
     return fold.closing ? e : 1 - e;
   };
 
-  const side = Math.round(box.w * 0.1);
+  const side = INSET;
   const bw = box.w - side * 2;
-  const bh = Math.round(bw * 1.3);
-  const plank = Math.max(4, Math.round(bw * 0.045));
-  const head = Math.round(bh * 0.2);
+  const bh = Math.round(bw * 0.7);
+  const plank = 4;
+  const head = HEAD;
   const pitch = head + bh + plank;
   const fr: Frame = { eye: { x: box.w / 2, y: box.vh / 2 - box.y }, top: TOP, head, bh, pitch, plank };
 
@@ -104,7 +105,7 @@ export function Rail({ index, course, set, onToggle }: { index: Index; course?: 
   });
   const height = y + plank - fr.top;
   // whatever doesn't fit; past either end it stretches and springs back
-  const [dy] = useShelfScroll(root, 1, 0, 0, Math.max(0, fr.top + height + 12 - box.h));
+  const [dy] = useShelfScroll(root, 1, 0, 0, Math.max(0, fr.top + height + INSET - box.h));
 
   // sets shrink as they fold; the course swells a little as each one reaches it
   const books: BookAt[] = placed.map(({ row, p, y: py }, i) => {
@@ -117,7 +118,6 @@ export function Rail({ index, course, set, onToggle }: { index: Index; course?: 
   const group = parent >= 0 ? placed.filter((q, i) => i === parent || q.row.k !== undefined) : [];
   const tint: [number, number] | undefined = group.length > 1
     ? [group[0].y - bh - head / 2, group[group.length - 1].y + plank] : undefined;
-  const r = rails('rail', [{ x: 0.5, w: box.w - 1 }], fr.eye, fr.top, height, 48);
 
   return (
     <nav class="rail" ref={root} aria-label="Courses">
@@ -128,9 +128,8 @@ export function Rail({ index, course, set, onToggle }: { index: Index; course?: 
       {box.w > 0 && (
         <svg class="scene" width={box.w} height={box.h}>
           <GlowFilter />
-          <Shelf id="rail" fr={fr} x={0.5} w={box.w - 1} dy={dy} tint={tint} tintOn={!set} books={books} backLines={false} flatBooks
+          <Shelf id="rail" fr={fr} x={0.5} w={box.w - 1} dy={dy} tint={tint} tintOn={!set} books={books} backLines={false} plain
             planks={placed.map(({ p, y: py }) => ({ y: py, alpha: 1 - Math.min(1, p * 3) }))} />
-          {r.front}
         </svg>
       )}
     </nav>

@@ -6,7 +6,6 @@
   --bad: #d93025;
 
   --bg: #ffffff;
-  --surface-2: #f6f6f8;
   --code-bg: #f6f6f8;
   --text: #1d1d1f;
   --text-2: #6e6e73;
@@ -24,8 +23,12 @@
   --sans: "Geist Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
 
-  --sb-w: 124px; /* the bookshelf rail */
-  --list-w: 340px;
+  --sb-w: 112px; /* the bookshelf rail */
+  --list-w: 300px;
+  /* one rhythm: controls are 36 tall and sit 14 in from the edges around them */
+  --ctl: 36px;
+  --inset: 14px;
+  --bar: 64px;   /* the list's head and the toolbar */
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -33,7 +36,6 @@
     --ok: #4cc26a;
     --bad: #ff6b5e;
     --bg: #1c1c1e;
-    --surface-2: #202023;
     --code-bg: #242427;
     --text: #f2f2f5;
     --text-2: #a1a1a6;
@@ -60,6 +62,13 @@
   --line-active: color-mix(in srgb, var(--text) 3.5%, transparent);
   --selection: color-mix(in srgb, var(--text) 20%, transparent);
   --selection-match: color-mix(in srgb, var(--text) 10%, transparent);
+  /* bars that content scrolls under: translucent and blurred, nothing more */
+  --glass: color-mix(in srgb, var(--bg) 76%, transparent);
+}
+.glass, .list-head, .toolbar, .files, .output-head {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  backdrop-filter: blur(16px) saturate(1.4);
 }
 
 /* ---------- base ---------- */
@@ -91,38 +100,40 @@ button { font: inherit; color: inherit; background: none; border: 0; border-radi
 /* ---------- rail: the bookshelf (shelves/Rail.tsx) ---------- */
 .rail { position: relative; height: 100dvh; overflow: hidden; touch-action: none; }
 .app.rail-closed { grid-template-columns: var(--list-w) minmax(0, 1fr); }
-/* a small tile, outlined like the books: over Home's left edge, or before the list's title.
-   Its top (20px) is the same in both places, so it doesn't jump when toggled. */
+/* a square tile, outlined like the books: over Home's left edge, or before the list's
+   title. It sits the same inset from the top and left in both, so it doesn't jump. */
 .rail-btn {
-  flex: none; display: grid; place-items: center; width: 32px; height: 24px;
+  flex: none; display: grid; place-items: center; width: var(--ctl); height: var(--ctl);
   background: var(--bg); border: 1px solid var(--line); color: var(--text-2);
 }
 .rail-btn:hover { border-color: var(--text); color: var(--text); }
-.rail-top { position: absolute; top: 20px; left: 0; z-index: 1; }
+.rail-top { position: absolute; top: var(--inset); left: 0; z-index: 1; }
 .rail-top .rail-btn { position: absolute; top: 0; }
 .sh-tint { fill: color-mix(in srgb, var(--text) 4%, transparent); }
 /* the open course's band glows, like a book, when the course itself is selected */
 .sh-tint.on { stroke: var(--text); stroke-width: 1.5; filter: url(#glow); }
 
 /* ---------- list ---------- */
-.list { overflow-y: auto; border-left: 1px solid var(--border); border-right: 1px solid var(--border); padding: 0 0 24px; overscroll-behavior: contain; }
+.list { position: relative; min-height: 0; overflow: hidden; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+/* the cards scroll under the head (a sibling, so its blur sees them) */
+.list-body { height: 100%; overflow-y: auto; padding: var(--bar) 0 24px; scroll-padding-top: var(--bar); overscroll-behavior: contain; }
 .rail-closed .list { border-left: 0; }
 .list-head {
-  position: sticky; top: 0; z-index: 2;
-  height: 64px; padding: 0 16px;
+  position: absolute; top: 0; left: 0; right: 0; z-index: 2;
+  height: var(--bar); padding: 0 var(--inset);
   display: flex; align-items: center; gap: 12px;
-  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
-.list-head > div { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
-.list-head h1 { margin: 0; font-size: 15px; font-weight: 650; letter-spacing: 0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.list-head p { margin: 0; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.group { display: flex; align-items: center; gap: 10px; margin: 0; padding: 18px 16px 8px; }
+/* title and subtitle stand exactly as tall as the toggle beside them */
+.list-head > div { min-width: 0; height: var(--ctl); display: flex; flex-direction: column; justify-content: space-between; }
+.list-head h1 { margin: 0; font-size: 15px; line-height: 20px; font-weight: 650; letter-spacing: 0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.list-head p { margin: 0; line-height: 14px; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.group { display: flex; align-items: center; gap: 10px; margin: 0; padding: 18px var(--inset) 8px; }
 .group::after { content: ""; flex: 1; border-top: 1px solid var(--border); }
 
 .card {
   position: relative; display: block;
-  padding: 12px 16px 12px 30px;
+  padding: 12px var(--inset) 12px 30px;
   border-bottom: 1px solid var(--border);
   content-visibility: auto; contain-intrinsic-size: auto 60px;
 }
@@ -132,7 +143,7 @@ button { font: inherit; color: inherit; background: none; border: 0; border-radi
 .card[aria-current] { background: var(--fill); outline: 1px solid var(--text); outline-offset: -1px; }
 :has(+ .card[aria-current]) { border-bottom-color: transparent; }
 /* progress: a hollow square once started, filled when every test passes */
-.dot { position: absolute; left: 13px; top: 18px; width: 7px; height: 7px; }
+.dot { position: absolute; left: var(--inset); top: 18px; width: 7px; height: 7px; }
 .dot.s1 { border: 1px solid var(--text-2); }
 .dot.s2 { background: var(--ok); }
 .card-top { display: flex; align-items: baseline; gap: 8px; }
@@ -147,15 +158,20 @@ button { font: inherit; color: inherit; background: none; border: 0; border-radi
 
 /* ---------- detail ---------- */
 .detail { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
-.detail-inner { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.detail-inner { position: relative; display: flex; flex-direction: column; height: 100%; min-height: 0; }
 .detail-inner.stale { opacity: 0.6; transition: opacity 0.15s 0.1s; }
 .detail-loading { height: 100%; }
 
-.toolbar { display: flex; align-items: center; gap: 12px; height: 64px; padding: 0 16px 0 28px; flex: none; border-bottom: 1px solid var(--border); }
+/* floats over the panes, which scroll under it */
+.toolbar {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 300;
+  display: flex; align-items: center; gap: 12px; height: var(--bar); padding: 0 var(--inset) 0 28px;
+  border-bottom: 1px solid var(--border);
+}
 .crumb { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-2); }
 .tb-back { display: none; }
 /* tiles: cells side by side, sharing their hairlines */
-.tb-group { display: flex; align-items: stretch; height: 34px; border: 1px solid var(--border); }
+.tb-group { display: flex; align-items: stretch; height: var(--ctl); border: 1px solid var(--border); }
 .tb-group > * + * { border-left: 1px solid var(--border); }
 .tb-btn { display: flex; align-items: center; gap: 7px; padding: 0 16px 0 13px; font-weight: 500; letter-spacing: 0.01em; }
 .tb-btn:hover { background: var(--hover); }
@@ -173,25 +189,26 @@ button { font: inherit; color: inherit; background: none; border: 0; border-radi
 .tb-btn:disabled { opacity: 0.35; cursor: default; }
 .tb-btn:disabled:hover { background: none; }
 .tb-btn.primary:disabled:hover { background: var(--text); }
-.tb-icon { display: grid; place-items: center; width: 38px; color: var(--text-2); }
+.tb-icon { display: grid; place-items: center; width: calc(var(--ctl) - 2px); color: var(--text-2); } /* square, inside the group's border */
 .tb-icon:hover { background: var(--hover); color: var(--text); }
 .tb-icon.on { background: var(--fill); color: var(--text); }
 .tb-icon.small { width: 26px; height: 24px; }
 
 .split {
   --split: 0.5;
+  --code-top: var(--bar); /* how far down the code pane the toolbar reaches */
   flex: 1; min-height: 0;
   display: flex;
 }
 .split > .doc { flex: 0 0 calc(var(--split) * 100%); }
 .split > .code { flex: 1 1 0; }
-.gutter { flex: none; width: 1px; background: var(--border); position: relative; cursor: col-resize; touch-action: none; }
+.gutter { flex: none; width: 1px; margin-top: var(--bar); background: var(--border); position: relative; cursor: col-resize; touch-action: none; }
 .gutter::after { content: ""; position: absolute; inset: 0 -5px; }
 .gutter:hover, .split.dragging .gutter { background: var(--line-strong); }
 .split.dragging { cursor: col-resize; user-select: none; }
 
 /* doc pane */
-.doc { min-width: 0; overflow-y: auto; padding: 0 28px 48px; overscroll-behavior: contain; }
+.doc { min-width: 0; overflow-y: auto; padding: var(--bar) 28px 48px; overscroll-behavior: contain; }
 .doc-head { padding: 28px 0 8px; }
 .doc-head h1 { margin: 0 0 12px; font-size: 26px; line-height: 1.15; font-weight: 700; letter-spacing: -0.02em; }
 .meta { display: flex; align-items: center; gap: 16px; }
@@ -231,22 +248,25 @@ button { font: inherit; color: inherit; background: none; border: 0; border-radi
 .shiki { background: var(--code-bg) !important; }
 
 /* code pane */
-.code { min-width: 0; display: flex; flex-direction: column; background: var(--bg); }
-.files { display: flex; flex: none; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+.code { position: relative; min-width: 0; display: flex; flex-direction: column; background: var(--bg); }
+/* floats over the editor, which scrolls under it (cm.ts pads the text down to match) */
+.files {
+  position: absolute; top: var(--code-top); left: 0; right: 0; z-index: 300;
+  display: flex; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--border);
+}
 .file {
   display: flex; align-items: center; gap: 6px; white-space: nowrap;
-  height: 36px; padding: 0 14px; font-family: var(--mono); font-size: 12px; color: var(--text-2);
+  height: var(--ctl); padding: 0 var(--inset); font-family: var(--mono); font-size: 12px; color: var(--text-2);
   border-right: 1px solid var(--border);
-  /* the open file is marked by a lit line along its top, and joins the editor below */
   position: relative;
 }
 .file:hover { color: var(--text); background: var(--hover); }
-.file.on { background: var(--bg); color: var(--text); }
+/* the open file: a lit line along its top */
+.file.on { color: var(--text); }
 .file.on::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--text); }
-.file.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; border-bottom: 1px solid var(--bg); }
 .editor { flex: 1; min-height: 0; background: var(--bg); }
 .output { flex: none; height: 42%; min-height: 120px; display: flex; flex-direction: column; border-top: 1px solid var(--border); background: var(--bg); }
-.output-head { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 6px 0 14px; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+.output-head { display: flex; align-items: center; gap: 8px; height: var(--ctl); padding: 0 6px 0 var(--inset); border-bottom: 1px solid var(--border); }
 .cmd { flex: 1; display: flex; align-items: center; gap: 8px; font: 12.5px var(--mono); }
 .cmd .prompt { color: var(--text-3); }
 .cmd input { flex: 1; min-width: 0; font: inherit; color: var(--text); background: none; border: 0; outline: none; padding: 4px 0; }
@@ -282,12 +302,15 @@ pre.muted { margin: 4px 0 8px 22px; }
   .app .rail { display: none; }
   .list { border-left: 0; border-right: 0; }
   .app[data-view="detail"] .list, .app[data-view="list"] .detail { display: none; }
-  .toolbar { padding: 0 12px 0 8px; height: 56px; }
+  :root { --bar: 56px; }
+  .split { --code-top: 0px; }
+  .gutter { margin-top: 0; }
+  .toolbar { padding: 0 12px 0 8px; }
   .tb-back { display: grid; place-items: center; width: 34px; height: 34px; }
   .tb-btn span, .keys, .rail-btn { display: none; }
   .tb-btn { padding: 0 11px; }
   .split { flex-direction: column; }
-  .split > .doc { flex: 0 0 calc(var(--split) * 100%); padding: 0 16px 24px; }
+  .split > .doc { flex: 0 0 calc(var(--split) * 100%); padding: var(--bar) 16px 24px; }
   .gutter { width: auto; height: 1px; cursor: row-resize; }
   .gutter::after { inset: -6px 0; }
   .doc-head h1 { font-size: 22px; }

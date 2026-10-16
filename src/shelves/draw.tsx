@@ -38,15 +38,18 @@ export const GlowFilter = () => (
 
 export interface BookSpec {
   key: string; title: string; sub: string; meta: string;
-  art: (x: number, y: number, s: number) => preact.JSX.Element;
+  art?: (x: number, y: number, s: number) => preact.JSX.Element; // the cover's icon (not drawn on plain books)
   href?: string; onPick?: () => void; on?: boolean;
 }
 
-/** A book: a box showing its front, and its top and inner side when the eye can see them (just the front when `flat`). */
-function Book({ r, eye, spec, flat }: { r: Rect; eye: P; spec: BookSpec; flat?: boolean }) {
+/**
+ * A book: a box showing its front, and its top and inner side when the eye can
+ * see them. `plain`: just the front and its title.
+ */
+function Book({ r, eye, spec, plain }: { r: Rect; eye: P; spec: BookSpec; plain?: boolean }) {
   const tl = { x: r.x, y: r.y }, tr = { x: r.x + r.w, y: r.y }, br = { x: r.x + r.w, y: r.y + r.h }, bl = { x: r.x, y: r.y + r.h };
   const back = (p: P) => toward(p, eye, BOOK_DEPTH);
-  const faces = flat ? [] : [
+  const faces = plain ? [] : [
     eye.y < r.y && poly(tl, tr, back(tr), back(tl)),
     eye.x > r.x + r.w && poly(tr, br, back(br), back(tr)),
     eye.x < r.x && poly(tl, bl, back(bl), back(tl)),
@@ -66,11 +69,17 @@ function Book({ r, eye, spec, flat }: { r: Rect; eye: P; spec: BookSpec; flat?: 
       <path class="bk-glow" d={front} />
       {faces.map((d) => <path class="bk-side" d={d} />)}
       <path class="bk-front" d={front} />
-      <clipPath id={clip}><path d={front} /></clipPath>
-      <g clip-path={`url(#${clip})`}>{spec.art(r.x + r.w - s * 0.86, r.y + r.h - s * 0.8, s)}</g>
-      <text class="bk-title" x={r.x + pad} y={line(0)} font-size={title}>{spec.title}</text>
-      <text class="bk-sub" x={r.x + pad} y={line(1.5)} font-size={small}>{spec.sub}</text>
-      <text class="bk-meta" x={r.x + pad} y={line(2.9)} font-size={small}>{spec.meta}</text>
+      {plain ? (
+        <text class="bk-title" x={r.x + 9} y={r.y + 9 + title * 0.8} font-size={title}>{spec.title}</text>
+      ) : (
+        <>
+          <clipPath id={clip}><path d={front} /></clipPath>
+          <g clip-path={`url(#${clip})`}>{spec.art?.(r.x + r.w - s * 0.86, r.y + r.h - s * 0.8, s)}</g>
+          <text class="bk-title" x={r.x + pad} y={line(0)} font-size={title}>{spec.title}</text>
+          <text class="bk-sub" x={r.x + pad} y={line(1.5)} font-size={small}>{spec.sub}</text>
+          <text class="bk-meta" x={r.x + pad} y={line(2.9)} font-size={small}>{spec.meta}</text>
+        </>
+      )}
     </>
   );
   const cls = `bk${spec.on ? ' on' : ''}`;
@@ -95,12 +104,13 @@ export interface BookAt { spec: BookSpec; r: Rect; alpha?: number; scale?: numbe
 
 /**
  * One case's planks and books, scrolled up by `dy`. `tint` shades a band
- * [top, bottom] from behind, to group what stands in it. `flatBooks` draws
- * books as just their fronts; the planks keep their depth either way.
+ * [top, bottom] from behind, to group what stands in it. `plain` keeps it
+ * quiet: books are just titled fronts, and planks keep their faces (the depth)
+ * but not the depth edges running on past them.
  */
-export function Shelf({ id, fr, x, w, planks, dy, books, tint, tintOn, backLines = true, flatBooks, empty }: {
+export function Shelf({ id, fr, x, w, planks, dy, books, tint, tintOn, backLines = true, plain, empty }: {
   id: string; fr: Frame; x: number; w: number; planks: PlankAt[]; dy: number;
-  books: BookAt[]; tint?: [number, number]; tintOn?: boolean; backLines?: boolean; flatBooks?: boolean; empty?: string;
+  books: BookAt[]; tint?: [number, number]; tintOn?: boolean; backLines?: boolean; plain?: boolean; empty?: string;
 }) {
   const back = (p: P) => toward(p, fr.eye, DEPTH);
   const ps = planks.map(({ y: rest, alpha = 1 }) => {
@@ -122,7 +132,7 @@ export function Shelf({ id, fr, x, w, planks, dy, books, tint, tintOn, backLines
         </g>
       ))}
       {books.map(({ spec, r, alpha = 1, scale = 1 }) => {
-        const book = <Book key={spec.key} eye={fr.eye} spec={spec} flat={flatBooks} r={{ ...r, y: r.y - dy }} />;
+        const book = <Book key={spec.key} eye={fr.eye} spec={spec} plain={plain} r={{ ...r, y: r.y - dy }} />;
         if (alpha === 1 && scale === 1) return book;
         const cx = r.x + r.w / 2, cy = r.y - dy + r.h / 2;
         return (
@@ -138,7 +148,7 @@ export function Shelf({ id, fr, x, w, planks, dy, books, tint, tintOn, backLines
       {ps.map((p, row) => (
         <g style={fade(p.alpha)}>
           <path class="pl-front" d={poly({ x, y: p.y }, { x: x + w, y: p.y }, { x: x + w, y: p.y + fr.plank }, { x, y: p.y + fr.plank })} />
-          {p.seen && [p.a, p.b].map((q, k) => {
+          {p.seen && !plain && [p.a, p.b].map((q, k) => {
             const u = { x: back(q).x - q.x, y: back(q).y - q.y };
             const from = { x: q.x - u.x * Z_REACH, y: q.y - u.y * Z_REACH };
             const to = { x: back(q).x + u.x * Z_REACH, y: back(q).y + u.y * Z_REACH };
@@ -177,7 +187,7 @@ const ART: Record<string, BookSpec['art']> = {
 export const courseBook = (c: Course, extra: Partial<BookSpec>): BookSpec => ({
   key: c.id, title: c.title, sub: c.sub,
   meta: `${c.sets.reduce((n, s) => n + count(s.groups), 0)} questions`,
-  art: ART[c.id] ?? (() => <g />),
+  art: ART[c.id],
   ...extra,
 });
 

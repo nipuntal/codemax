@@ -32,7 +32,8 @@ const highlight = HighlightStyle.define([
 const theme = EditorView.theme({
   '&': { height: '100%', fontSize: '13px', backgroundColor: 'transparent', color: 'var(--text)' },
   '.cm-scroller': { fontFamily: 'var(--mono)', lineHeight: '1.6' },
-  '.cm-content': { padding: '12px 0', caretColor: 'var(--text)' },
+  // the toolbar and file tabs float over the editor: start the text below them
+  '.cm-content': { padding: 'calc(var(--code-top, 0px) + var(--ctl, 36px) + 12px) 0 12px', caretColor: 'var(--text)' },
   '.cm-gutters': { backgroundColor: 'transparent', border: 'none', color: 'var(--text-3)' },
   '.cm-lineNumbers .cm-gutterElement': { padding: '0 12px 0 16px', minWidth: '40px' },
   '.cm-activeLine, .cm-activeLineGutter': { backgroundColor: 'var(--line-active)' },
@@ -41,7 +42,7 @@ const theme = EditorView.theme({
   '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection': { backgroundColor: 'var(--selection) !important' },
   '.cm-matchingBracket': { backgroundColor: 'var(--line-active)', outline: '1px solid var(--border)' },
   '.cm-selectionMatch': { backgroundColor: 'var(--selection-match)' },
-  '.cm-panels': { backgroundColor: 'var(--surface-2)', color: 'var(--text)', borderColor: 'var(--border)' },
+  '.cm-panels': { backgroundColor: 'var(--bg)', color: 'var(--text)', borderColor: 'var(--border)' },
 });
 
 const languages: Record<Lang, () => Extension> = {
@@ -56,6 +57,11 @@ const base: Extension = [
   dropCursor(), indentOnInput(), bracketMatching(), closeBrackets(), rectangularSelection(),
   highlightActiveLine(), highlightSelectionMatches(), syntaxHighlighting(highlight), theme,
   indentUnit.of('    '), EditorState.tabSize.of(4),
+  // and keep the cursor clear of them when scrolling to it
+  EditorView.scrollMargins.of((v) => {
+    const css = getComputedStyle(v.dom);
+    return { top: (parseFloat(css.getPropertyValue('--code-top')) || 0) + (parseFloat(css.getPropertyValue('--ctl')) || 36) };
+  }),
   keymap.of([...closeBracketsKeymap, ...defaultKeymap, ...searchKeymap, ...historyKeymap, indentWithTab]),
 ];
 
