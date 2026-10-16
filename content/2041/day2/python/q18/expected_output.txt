@@ -1,0 +1,17 @@
+     1  first
+     2  second
+     3  third
+==
+     1  first
+     2  second
+     3  third
+     4  fourth
+     5  fifth
+==
+a^Ib
+^Gbell
+plain
+==
+     1  a^Ib
+     2  ^Gbell
+     3  plain

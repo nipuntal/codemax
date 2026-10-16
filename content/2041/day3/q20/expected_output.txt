@@ -1,0 +1,14 @@
+stdout-empty
+hello
+world
+
+last line
+== second run idempotent:
+hello
+world
+
+last line
+==
+a
+
+b

@@ -1,0 +1,4 @@
+3 distinct words seen after 2 lines read.
+4 distinct words seen after 3 lines read.
+End of input reached after 2 lines read - 10 different words not seen.
+1 distinct words seen after 1 lines read.

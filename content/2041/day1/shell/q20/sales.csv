@@ -1,0 +1,13 @@
+date,region,item,amount
+2026-08-01,north,widget,150
+2026-08-01,south,gadget,200
+2026-08-02,north,widget,120
+2026-08-02,east,doohickey,90
+2026-08-03,south,widget,300
+2026-08-03,north,gadget,75
+2026-08-04,west,widget,210
+2026-08-04,east,widget,60
+2026-08-05,south,doohickey,140
+2026-08-05,north,widget,180
+2026-08-06,west,gadget,95
+2026-08-06,east,widget,45

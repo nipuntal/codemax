@@ -1,0 +1,22 @@
+alpha 1
+alpha 2
+==
+==> a.txt <==
+alpha 1
+alpha 2
+
+==> b.txt <==
+beta 1
+beta 2
+==
+==> a.txt <==
+alpha 1
+alpha 2
+alpha 3
+
+==> b.txt <==
+beta 1
+beta 2
+beta 3
+==
+q17.py: cannot open nosuch.txt

@@ -1,0 +1,8 @@
+name    qty  price
+apple    10      3
+banana    5     12
+fig     100      7
+==
+course        zid  name
+COMP2041  3383025  Thorpe, Ian
+COMP1511  3360379  Costner, Kevin Augustus

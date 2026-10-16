@@ -1,0 +1,3 @@
+a.txt: 2 lines, 5 words, 29 characters
+b.txt: 3 lines, 6 words, 28 characters
+total: 5 lines, 11 words, 57 characters

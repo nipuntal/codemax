@@ -1,0 +1,6 @@
+host = localhost
+port = 8080
+db_name = students
+db_user = cs2041
+log_level = debug
+log_file = /var/log/app.log

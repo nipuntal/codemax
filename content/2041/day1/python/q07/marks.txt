@@ -1,0 +1,6 @@
+Alice 72
+Bob 91
+Carol 65
+Dave 88
+Eve 54
+Frank 100

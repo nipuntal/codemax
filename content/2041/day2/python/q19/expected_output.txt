@@ -1,0 +1,21 @@
+students: 10
+courses: 10
+Enrolments per course:
+  COMP3311 3
+  COMP3331 3
+  COMP1917 2
+  COMP2041 2
+  COMP1927 1
+  COMP2920 1
+  COMP3141 1
+  COMP3411 1
+  COMP3891 1
+  COMP4920 1
+Students in most courses:
+  3383025 Ian Thorpe (3 courses)
+  3360582 Liam Neeson (2 courses)
+  3860448 Mary Steenburgen (2 courses)
+Shared first names:
+  Ian: 3371161, 3383025
+  Mary: 3364562, 3711611, 3860448
+  Wei: 5122456, 5456732

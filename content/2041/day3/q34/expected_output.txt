@@ -1,0 +1,13 @@
+mv Data.TXT data_txt
+mv My_Notes.TXT my_notes_txt
+mv notes.txt notes_txt.1
+mv notes-txt notes_txt.2
+mv report-2026.md report_2026_md
+# notes_txt unchanged
+== unchanged:
+Data.TXT
+My_Notes.TXT
+notes-txt
+notes.txt
+notes_txt
+report-2026.md

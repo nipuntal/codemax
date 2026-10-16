@@ -1,0 +1,7 @@
+chmod 755 run1
+chmod 755 run2
+# notes.txt is not a script
+# run3 is already executable
+-- files unchanged:
+-rw-r--r--
+-rwxr-xr-x

@@ -1,0 +1,6 @@
+Nobel Prize for physics|1921|Albert Einstein|Male|Germany|1879
+Fields Medal|1966|Michael Atiyah|Male|United Kingdom|1929
+Fields Medal|2018|Akshay Venkatesh|Male|Australia|1981
+Nobel Prize for chemistry|2020|Nina N. Novak|Female|Poland|1993
+Nobel Prize for peace|2014|Malala Yousafzai|Female|Pakistan|1997
+ACM Turing Award|1966|Alan J. Perlis|Male|United States|1922

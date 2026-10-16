@@ -1,0 +1,4 @@
+The color of the box is 24 units wide, and 10 units tall.
+Pick a color: red, green, blue
+There are 200 items, sorted by color
+trailing spaces here

@@ -1,0 +1,5 @@
+alice@example.com
+bob.jones@cse.unsw.edu.au
+frank_lee@mail.example.org
+h@a.io
+z5312001@ad.unsw.edu.au

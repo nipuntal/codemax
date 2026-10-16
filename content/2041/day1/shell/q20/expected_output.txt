@@ -1,0 +1,7 @@
+Regions:
+  east: 195
+  north: 525
+  south: 640
+  west: 305
+Top item: widget (7 sales)
+Grand total: 1665

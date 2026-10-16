@@ -1,0 +1,14 @@
+COMP1917|3360379|Costner, Kevin Augustus          |3978/1|M
+comp1917|3364562|Carey, Mary                      |3711/1|M
+COMP331|3383025|Thorpe, Ian Augustus              |3978/3|M
+COMP2041|3860448|Steenburgen, Mary Nell           |3978/3|F
+COMP2920|386044|Steenburgen, Mary Nell            |3978/3|F
+COMP3411|38637111|Klum, Heidi                     |3978/3|F
+COMP3141|3383025|Thorpe Ian Augustus              |3978/3|M
+COMP3311|3711611|Klum, Mary                       |3978/3|F
+COMP3331|3383025|Thorpe, ian Augustus             |3978/3|M
+COMP9044|5122456|Wang, Wei                        |3978/2|M
+COMP4920|5456732|Wang, Wei                        |3978/22|M
+COMP1927|3360582|Neeson, Liam                     |3711/2|X
+COMP3891|3863711|Klum, Heidi June Anne            |3978/3|
+COMP2121|5456732|Wang, Wei                        |36478/3|M

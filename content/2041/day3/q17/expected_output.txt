@@ -1,0 +1,19 @@
+# script.rs already has an extension
+# script1 does not have a #! line
+# script2 no extension for #! line
+mv script3 script3.py
+==
+# script1 does not have a #! line
+# script2 no extension for #! line
+mv script3 script3.py
+mv script4 script4.pl
+mv script5 script5.sh
+==
+# script4.pl already exists
+== unchanged:
+script.rs
+script1
+script2
+script3
+script4
+script5

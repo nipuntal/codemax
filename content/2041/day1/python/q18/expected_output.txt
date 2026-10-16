@@ -1,0 +1,6 @@
+alpha.txt  file  12
+beta.txt  file  14
+script.sh  file  18
+subdir  dir  -
+tiny.dat  file  1
+4 files, 1 dirs, 45 bytes

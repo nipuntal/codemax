@@ -1,0 +1,7 @@
+Alice scored 72 in COMP2041
+Bob scored 91 in COMP2041
+Carol scored 65 in COMP1511
+Dave scored 88 in COMP2521
+Eve scored 54 in COMP2041
+Frank scored 79 in COMP1521
+average: 74

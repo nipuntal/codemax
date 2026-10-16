@@ -1,0 +1,5 @@
+The shell is a program. The shell reads commands and the shell runs them.
+A pipeline connects the output from one program into the input of another
+program. The power of the shell: a small program combined with another
+program can solve big problems. Write a program that does one thing well,
+and let the shell glue your programs together.

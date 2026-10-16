@@ -1,0 +1,4 @@
+  The   COLOUR of the box is 12 units wide,and 5 units tall.
+Pick a Color: red,green,blue
+There are   100   items,   sorted by colour
+   trailing spaces here   

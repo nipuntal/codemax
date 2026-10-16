@@ -1,0 +1,11 @@
+links:
+https://cse.unsw.edu.au/~cs2041/
+mailto:cs2041@cse.unsw.edu.au
+lectures.html
+labs.html
+lectures.html
+emails:
+alice@example.com
+bob@example.com
+cs2041@cse.unsw.edu.au
+tags: a=5 body=1 h1=1 head=1 html=1 li=3 p=3 title=1 ul=1

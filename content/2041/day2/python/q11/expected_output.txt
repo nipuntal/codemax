@@ -1,0 +1,16 @@
+The cat sat
+Dogs and cats
+--
+The cat sat
+the Cat ran
+Dogs and cats
+--
+A DOG barked
+birds fly
+--
+1:The cat sat
+3:the Cat ran
+5:Dogs and cats
+--
+1:The cat sat
+3:the Cat ran

@@ -1,0 +1,4 @@
+identical
+1 line(s) differ, first at line 3
+a.txt has 4 lines, c.txt has 2 lines; 0 common line(s) differ
+c.txt has 2 lines, b.txt has 4 lines; 0 common line(s) differ

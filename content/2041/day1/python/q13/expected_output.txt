@@ -1,0 +1,4 @@
+only in a.txt: apple date elderberry
+only in b.txt: grape honeydew kiwi
+in both: banana cherry fig
+total distinct: 9

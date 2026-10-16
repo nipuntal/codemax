@@ -1,0 +1,111 @@
+COMP3121|5316028|Yong, Duc James                  |3648/3|M
+COMP2521|5233452|Li, Tuan                         |3707/1|M
+COMP2041|5392528|Wang, Ying Thi                   |3778/1|F
+COMP2041|5368483|Lam, Xiu James                   |3778/2|F
+COMP1521|5208454|Bian, Feng Lee                   |3707/1|M
+COMP3121|5292410|Xiao, Arjun Kumar                |3707/1|M
+COMP1531|5354467|Jiang, Jia                       |3648/3|F
+COMP1531|5281086|Trinh, Arjun Marie               |3778/2|M
+COMP1531|5403020|Yao, Tuan James                  |3707/3|M
+COMP1531|5422258|Guo, Rahul Marie                 |3648/3|M
+COMP1521|5254889|Luu, Arjun Lee                   |3778/3|M
+COMP4920|5281086|Trinh, Arjun Marie               |3778/2|M
+COMP2521|5207056|Bai, Khoa Lee                    |3707/1|M
+COMP2121|5388917|Shen, Linh Kumar                 |3648/2|F
+COMP3121|5349906|Huang, Lien Van                  |3707/3|F
+COMP3331|5333456|Dinh, Mei                        |3707/1|F
+COMP1521|5281086|Trinh, Arjun Marie               |3778/2|M
+COMP3121|5359620|Kaur, Linh Van                   |3707/2|F
+COMP9044|5285491|Wu, Tuan                         |3789/1|M
+COMP2121|5243835|Lu, Quang James                  |3648/2|M
+COMP1521|5207056|Bai, Khoa Lee                    |3707/1|M
+COMP1511|5243835|Lu, Quang James                  |3648/2|M
+COMP2041|5216214|Cai, Vinh                        |3778/3|M
+COMP3411|5277481|Tran, Bao James                  |3778/3|M
+COMP2041|5403020|Yao, Tuan James                  |3707/3|M
+COMP4920|5388917|Shen, Linh Kumar                 |3648/2|F
+COMP1531|5226107|Islam, Kiran Van                 |3778/3|M
+COMP1521|5346956|Ho, Fen                          |3778/3|F
+COMP3411|5392528|Wang, Ying Thi                   |3778/1|F
+COMP3331|5207056|Bai, Khoa Lee                    |3707/1|M
+COMP2121|5259471|Murray, Jian                     |3778/1|M
+COMP4920|5226107|Islam, Kiran Van                 |3778/3|M
+COMP3331|5320966|Zeng, Minh James                 |3707/1|M
+COMP1521|5359620|Kaur, Linh Van                   |3707/2|F
+COMP1511|5346956|Ho, Fen                          |3778/3|F
+COMP1531|5251310|Luong, Hao Lee                   |3778/2|M
+COMP4920|5320966|Zeng, Minh James                 |3707/1|M
+COMP1521|5403020|Yao, Tuan James                  |3707/3|M
+COMP2121|5329335|Chen, Lien                       |3707/3|F
+COMP3121|5294556|Yao, Wei James                   |3707/2|M
+COMP3121|5354467|Jiang, Jia                       |3648/3|F
+COMP3311|5393943|Zhao, Thu Thi                    |3778/2|F
+COMP3311|5349906|Huang, Lien Van                  |3707/3|F
+COMP4920|5218222|Cui, Son Anne                    |3707/3|M
+COMP4920|5414827|Yip, Tuan James                  |3648/2|M
+COMP1521|5388917|Shen, Linh Kumar                 |3648/2|F
+COMP2521|5259471|Murray, Jian                     |3778/1|M
+COMP1511|5397568|Saha, Peng Thi                   |3707/2|M
+COMP3411|5390384|Vu, Trang                        |3778/2|F
+COMP3311|5226107|Islam, Kiran Van                 |3778/3|M
+COMP2521|5303061|Ye, Bao Lee                      |3789/1|M
+COMP3311|5414827|Yip, Tuan James                  |3648/2|M
+COMP2121|5233452|Li, Tuan                         |3707/1|M
+COMP4920|5237414|Long, Hien Marie                 |3707/2|M
+COMP4920|5349906|Huang, Lien Van                  |3707/3|F
+COMP1521|5251310|Luong, Hao Lee                   |3778/2|M
+COMP3411|5254889|Luu, Arjun Lee                   |3778/3|M
+COMP1521|5259471|Murray, Jian                     |3778/1|M
+COMP2041|5393943|Zhao, Thu Thi                    |3778/2|F
+COMP2121|5349906|Huang, Lien Van                  |3707/3|F
+COMP3411|5216214|Cai, Vinh                        |3778/3|M
+COMP2521|5218222|Cui, Son Anne                    |3707/3|M
+COMP1531|5320966|Zeng, Minh James                 |3707/1|M
+COMP2041|5208454|Bian, Feng Lee                   |3707/1|M
+COMP3311|5386607|Qiu, Xiu Anne                    |3648/3|F
+COMP9044|5267196|Ngo, Vinh Thi                    |3648/3|M
+COMP4920|5409565|Ngo, Quang Anne                  |3778/3|M
+COMP2521|5223241|Guo, Feng                        |3778/2|M
+COMP1521|5237414|Long, Hien Marie                 |3707/2|M
+COMP3121|5254889|Luu, Arjun Lee                   |3778/3|M
+COMP3311|5218222|Cui, Son Anne                    |3707/3|M
+COMP3331|5397568|Saha, Peng Thi                   |3707/2|M
+COMP4920|5397568|Saha, Peng Thi                   |3707/2|M
+COMP1521|5354467|Jiang, Jia                       |3648/3|F
+COMP2041|5414827|Yip, Tuan James                  |3648/2|M
+COMP1531|5292410|Xiao, Arjun Kumar                |3707/1|M
+COMP1531|5226942|Kumar, Peng Kumar                |3778/3|M
+COMP4920|5243835|Lu, Quang James                  |3648/2|M
+COMP3311|5316028|Yong, Duc James                  |3648/3|M
+COMP2121|5292410|Xiao, Arjun Kumar                |3707/1|M
+COMP1531|5329335|Chen, Lien                       |3707/3|F
+COMP4920|5346956|Ho, Fen                          |3778/3|F
+COMP1531|5216214|Cai, Vinh                        |3778/3|M
+COMP3121|5281086|Trinh, Arjun Marie               |3778/2|M
+COMP4920|5208454|Bian, Feng Lee                   |3707/1|M
+COMP2041|5401890|Luong, Wei James                 |3707/2|M
+COMP2521|5243835|Lu, Quang James                  |3648/2|M
+COMP1531|5207056|Bai, Khoa Lee                    |3707/1|M
+COMP4920|5359620|Kaur, Linh Van                   |3707/2|F
+COMP3311|5359620|Kaur, Linh Van                   |3707/2|F
+COMP2121|5379872|Pham, Yan Thi                    |3778/3|F
+COMP1511|5237414|Long, Hien Marie                 |3707/2|M
+COMP2041|5233452|Li, Tuan                         |3707/1|M
+COMP9044|5409565|Ngo, Quang Anne                  |3778/3|M
+COMP3411|5311576|Yip, Son                         |3707/2|M
+COMP3121|5285491|Wu, Tuan                         |3789/1|M
+COMP3411|5285491|Wu, Tuan                         |3789/1|M
+COMP3411|5409565|Ngo, Quang Anne                  |3778/3|M
+COMP3121|5338029|Fang, Priya Anne                 |3648/2|F
+COMP3121|5368483|Lam, Xiu James                   |3778/2|F
+COMP3121|5216214|Cai, Vinh                        |3778/3|M
+COMP1511|5271958|Saha, Quang Thi                  |3648/2|M
+COMP2121|5392528|Wang, Ying Thi                   |3778/1|F
+COMP2521|5294556|Yao, Wei James                   |3707/2|M
+COMP3331|5271958|Saha, Quang Thi                  |3648/2|M
+COMP3121|5288257|Xia, Bao                         |3778/2|M
+COMP3411|5414827|Yip, Tuan James                  |3648/2|M
+COMP3121|5371730|Nguyen, Ananya Van               |3789/1|F
+COMP4920|5254889|Luu, Arjun Lee                   |3778/3|M
+COMP3121|5379872|Pham, Yan Thi                    |3778/3|F
+COMP1521|5233452|Li, Tuan                         |3707/1|M

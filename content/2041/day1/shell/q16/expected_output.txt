@@ -1,0 +1,11 @@
+92 HD
+78 DN
+65 CR
+50 PS
+49 FL
+100 HD
+abc invalid
+84 DN
+-5 invalid
+74 CR
+0 FL

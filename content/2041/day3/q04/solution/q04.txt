@@ -1,0 +1,14 @@
+# Add a single grep command after each ANSWER: label.
+# Do not change anything else in this file.
+
+# Question 1: awards won by an Australian
+ANSWER: grep -E '\|Australia\|' awards.psv
+
+# Question 2: a female ACM Turing Award winner
+ANSWER: grep -E '^ACM Turing Award\|[^|]*\|[^|]*\|Female\|' awards.psv
+
+# Question 3: Nobel Prizes won by a person born between 1990 and 1999 inclusive
+ANSWER: grep -E '^Nobel Prize[^|]*\|([^|]*\|){4}199[0-9]$' awards.psv
+
+# Question 4: first name, middle initial and last name all start with the same letter
+ANSWER: grep -E '\|([A-Z])[a-z]+ \1\. \1[a-z]+\|' awards.psv

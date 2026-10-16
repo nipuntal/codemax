@@ -1,0 +1,11 @@
+--- normal case
+status=0
+README
+main.c
+notes.txt
+--- clash case
+a exists
+status=1
+a
+a.bak
+b.bak

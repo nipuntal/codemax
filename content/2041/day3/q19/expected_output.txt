@@ -1,0 +1,18 @@
+ln -s file0.txt file3.txt
+ln -s file2.txt file5.txt
+ln -s file1.txt file6.txt
+ln -s file2.txt file7.txt
+==
+ln -s file6.txt file1.txt
+ln -s file2.txt file5.txt
+ln -s file2.txt file7.txt
+ln -s file3.txt file0.txt
+==
+ln -s file7.txt file5.txt
+ln -s file7.txt file2.txt
+ln -s file6.txt file1.txt
+ln -s file3.txt file0.txt
+==
+ln -s file3.txt file0.txt
+==
+No files can be replaced by symbolic links

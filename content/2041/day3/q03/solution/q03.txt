@@ -1,0 +1,14 @@
+# Put a single grep command after each ANSWER: label.
+# Do not change anything else in this file.
+
+# 1. Fields Medal winners
+ANSWER: grep -E '^Fields Medal\|' awards.psv
+
+# 2. Awards given in the 1960s
+ANSWER: grep -E '^[^|]*\|196[0-9]\|' awards.psv
+
+# 3. Winners from Japan (country field)
+ANSWER: grep -E '\|Japan\|' awards.psv
+
+# 4. Winners with a middle initial
+ANSWER: grep -E '\|[A-Za-z]+ [A-Z]\. [A-Za-z]+\|' awards.psv

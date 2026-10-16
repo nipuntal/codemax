@@ -1,0 +1,14 @@
+# Add a single grep command after each ANSWER: label.
+# Do not change anything else in this file.
+
+# Question 1: awards won by an Australian
+ANSWER:
+
+# Question 2: a female ACM Turing Award winner
+ANSWER:
+
+# Question 3: Nobel Prizes won by a person born between 1990 and 1999 inclusive
+ANSWER:
+
+# Question 4: first name, middle initial and last name all start with the same letter
+ANSWER:

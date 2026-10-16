@@ -1,0 +1,11 @@
+rm file3.txt
+rm file5.txt
+rm file6.txt
+==
+No duplicate files
+==
+rm file5.txt
+rm file7.txt
+==
+No duplicate files
+exit=0

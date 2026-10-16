@@ -1,0 +1,16 @@
+cat
+bat cap cot hat
+bag cog cup dot hot lot
+big bog dog hop log
+top
+tip
+exit=0
+==
+tip
+top
+hop
+hot
+cot dot hat lot
+bat cat cog dog log
+bag bog cap
+big cup

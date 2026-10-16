@@ -1,0 +1,32 @@
+{
+  "name": "codemax",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "import": "node scripts/import.mjs",
+    "content": "node scripts/build-content.mjs",
+    "dev": "npm run content && vite",
+    "build": "npm run content && tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@codemirror/autocomplete": "^6.20.3",
+    "@codemirror/commands": "^6.11.1",
+    "@codemirror/lang-python": "^6.2.1",
+    "@codemirror/lang-sql": "^6.10.0",
+    "@codemirror/language": "^6.13.1",
+    "@codemirror/legacy-modes": "^6.5.5",
+    "@codemirror/search": "^6.7.2",
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/view": "^6.43.14",
+    "@lezer/highlight": "^1.2.5",
+    "preact": "^10.29.8"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "marked": "^18.1.1",
+    "shiki": "^4.5.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.7"
+  }
+}

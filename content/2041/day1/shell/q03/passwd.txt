@@ -1,0 +1,8 @@
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+alice:x:1001:1001:Alice Smith:/home/alice:/bin/bash
+bob:x:1002:1002:Bob Jones:/home/bob:/bin/zsh
+carol:x:1003:1003:Carol Wu:/home/carol:/bin/bash
+dave:x:1004:1004:Dave Ng:/home/dave:/bin/sh
+cs2041:x:2041:2041:Class Account:/home/cs2041:/bin/bash
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin

@@ -1,0 +1,6 @@
+notes.txt: text
+run.sh: shell script
+main.py: python script
+logo.png: image
+data.csv: unknown
+README.md: text

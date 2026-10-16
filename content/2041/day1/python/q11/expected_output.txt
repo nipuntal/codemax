@@ -1,0 +1,27 @@
+By mark:
+Bob 91
+Eve 91
+Dave 88
+Gina 88
+Alice 72
+Carol 72
+Frank 65
+Hal 54
+By name length:
+Bob 91
+Eve 91
+Hal 54
+Dave 88
+Gina 88
+Alice 72
+Carol 72
+Frank 65
+By course then mark:
+COMP1511 Dave 88
+COMP1511 Gina 88
+COMP2041 Eve 91
+COMP2041 Alice 72
+COMP2041 Carol 72
+COMP2041 Hal 54
+COMP2521 Bob 91
+COMP2521 Frank 65

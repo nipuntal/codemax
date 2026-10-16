@@ -1,0 +1,1 @@
+shell scripting is a useful skill for any programmer

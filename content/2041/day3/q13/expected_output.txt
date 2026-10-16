@@ -1,0 +1,6 @@
+Not mirrored: line 2 different
+Not mirrored: line 1 different
+Not mirrored: line 1 different
+Mirrored
+Mirrored
+Not mirrored: different number of lines: 2 versus 1

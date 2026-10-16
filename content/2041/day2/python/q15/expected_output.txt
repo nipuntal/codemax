@@ -1,0 +1,20 @@
+cat
+Dog
+dog
+bird
+cat
+--
+   2 cat
+   1 Dog
+   1 dog
+   1 bird
+   3 cat
+--
+   2 cat
+   2 Dog
+   1 bird
+   3 cat
+--
+cat
+Dog
+cat

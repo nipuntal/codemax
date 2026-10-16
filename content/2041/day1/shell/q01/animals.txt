@@ -1,0 +1,10 @@
+cat
+dog
+catfish
+horse
+bobcat
+dog
+elephant
+cat
+mouse
+scatter

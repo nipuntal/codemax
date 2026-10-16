@@ -1,0 +1,11 @@
+z5312001 -> zid
+alice@example.com -> email
+07/08/2026 -> date
+-42 -> int
+hello -> word
+z531200 -> other
+123abc -> other
+COMP2041 -> other
+0 -> int
+7/8/2026 -> other
+z5312001@ad.unsw.edu.au -> email

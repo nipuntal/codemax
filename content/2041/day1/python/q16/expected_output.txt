@@ -1,0 +1,10 @@
+10:14:02 ERROR db: connection refused
+10:14:05 INFO http: GET /index.html 200
+10:14:09 WARN cache: eviction rate high
+malformed: this line is broken
+10:15:01 INFO http: GET /style.css 200
+10:15:33 ERROR db: timeout after 30s
+malformed: [10:16:00] INFO missing module
+10:16:12 DEBUG auth: token refreshed
+10:16:40 INFO http: GET /logo.png 200
+9 lines, 2 malformed, levels: DEBUG=1 ERROR=2 INFO=3 WARN=1

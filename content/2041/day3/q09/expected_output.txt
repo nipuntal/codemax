@@ -1,0 +1,7 @@
+count: 6
+sum: 252
+mean: 42
+--
+count: 11
+sum: 74
+mean: 6

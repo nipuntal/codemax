@@ -1,0 +1,3 @@
+   4 /index.html
+   3 /style.css
+   2 /logo.png

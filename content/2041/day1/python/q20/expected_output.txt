@@ -1,0 +1,12 @@
+Students: 7
+Courses: 4
+Top students:
+  z5312007 92.0
+  z5312002 89.5
+  z5312004 87.0
+Course averages:
+  COMP1511 69.3 (3 students)
+  COMP1521 84.7 (3 students)
+  COMP2041 71.5 (6 students)
+  COMP2521 86.6 (5 students)
+Failed at least one course: z5312003, z5312005

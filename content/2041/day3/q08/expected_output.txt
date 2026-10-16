@@ -1,0 +1,9 @@
+COMP1511 2 student(s): Kevin Costner, Mary Carey
+COMP1521 1 student(s): Liam Neeson
+COMP2041 2 student(s): Liam Neeson, Mary Steenburgen
+COMP3141 1 student(s): Ian Thorpe
+COMP3311 3 student(s): Ian Thorpe, Ian Thorpe, Mary Klum
+COMP3331 3 student(s): Ian Thorpe, Wei Wang, Wei Wang
+COMP3411 1 student(s): Heidi Klum
+COMP3891 1 student(s): Heidi Klum
+COMP4920 2 student(s): Mary Steenburgen, Wei Wang

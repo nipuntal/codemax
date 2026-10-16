@@ -1,0 +1,7 @@
+17 prime=yes digitsum=8 reverse=71
+100 prime=no digitsum=1 reverse=1
+1 prime=no digitsum=1 reverse=1
+23 prime=yes digitsum=5 reverse=32
+9 prime=no digitsum=9 reverse=9
+420 prime=no digitsum=6 reverse=24
+7919 prime=yes digitsum=26 reverse=9197

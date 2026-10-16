@@ -1,0 +1,4 @@
+4 words: the|quick|brown|fox
+4 words: lots|of|spaces|here
+1 words: one
+5 words: alpha|beta|gamma|delta|epsilon

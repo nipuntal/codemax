@@ -1,0 +1,14 @@
+Hello, World!! How are you?
+line two here
+
+ spaced out 
+==
+Hello World How are you?
+line two here
+
+ spaced out 
+==
+HLL, WRLD!! HW R Y?
+LN TW HR
+
+ SPCD T 

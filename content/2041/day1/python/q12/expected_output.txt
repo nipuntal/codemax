@@ -1,0 +1,5 @@
+COMP1511: 2 students, avg 83.5, top Alice (88)
+COMP1521: 1 students, avg 68.0, top Dave (68)
+COMP2041: 4 students, avg 78.0, top Bob (91)
+COMP2521: 3 students, avg 79.0, top Bob (91)
+students enrolled in more than one course: Alice, Bob, Carol, Dave, Eve

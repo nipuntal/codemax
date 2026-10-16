@@ -1,0 +1,184 @@
+COMP3331|5244759|Khan, Hamish                     |3778/2|F
+COMP1521|5240560|Yilmaz, Xiaoyu James             |3648/3|M
+COMP3411|5230443|Tran, Sanjay John                |3789/1|M
+COMP3121|5228441|Patel, Fatima                    |3778/1|F
+COMP2521|5267407|Nguyen, Bo                       |3778/2|F
+COMP4920|5245601|Silva, Uma Rose                  |3648/3|M
+COMP2521|5224246|Patel, Tara Lee                  |3648/3|F
+COMP3311|5240560|Yilmaz, Xiaoyu James             |3648/3|M
+COMP2521|5258623|Singh, Grace Rose                |3707/1|F
+COMP3121|5227973|Garcia, Adrian Rose              |3778/1|M
+COMP3411|5240602|Tran, Hamish Marie               |3778/2|F
+COMP1521|5245601|Silva, Uma Rose                  |3648/3|M
+COMP9044|5275311|Novak, Victor Anne               |3778/1|M
+COMP3121|5287633|Smith, Olivia Lee                |3707/3|F
+COMP3411|5270896|Chen, Zeyu Anne                  |3707/1|F
+COMP3121|5245601|Silva, Uma Rose                  |3648/3|M
+COMP3331|5284964|Kim, Fatima Kumar                |3648/2|F
+COMP3411|5273184|Yilmaz, Wei                      |3778/2|F
+COMP1531|5217218|Yilmaz, Grace Anne               |3707/3|M
+COMP3121|5234789|Silva, Olivia Kumar              |3789/1|F
+COMP3311|5210272|Yilmaz, Callum Lee               |3648/3|F
+COMP9044|5205879|Brown, Alvin Wei                 |3707/3|F
+COMP4920|5244759|Khan, Hamish                     |3778/2|F
+COMP3121|5296342|Brown, Ruby                      |3778/1|F
+COMP3311|5265841|Yilmaz, Mei Marie                |3778/2|M
+COMP2521|5296587|Singh, Alvin Rose                |3707/2|F
+COMP2521|5239219|Garcia, Brendan Wei              |3707/2|F
+COMP2521|5206182|Chen, Brian Rose                 |3789/1|M
+COMP3121|5257689|Wang, Yara James                 |3707/3|M
+COMP3331|5231680|Nguyen, Nikhil Lee               |3707/3|F
+COMP1521|5270896|Chen, Zeyu Anne                  |3707/1|F
+COMP3411|5211746|Wang, Mei Rose                   |3707/1|F
+COMP3121|5276270|Brown, Brian Kumar               |3648/3|F
+COMP2521|5267415|Novak, Brian Rose                |3648/2|F
+COMP2121|5232147|OConnor, Daniel                  |3778/3|M
+COMP3331|5227973|Garcia, Adrian Rose              |3778/1|M
+COMP1521|5226371|Brown, Isabella James            |3778/2|F
+COMP3411|5287633|Smith, Olivia Lee                |3707/3|F
+COMP9044|5216983|Singh, Abdullah James            |3778/1|M
+COMP1531|5266543|Brown, Aaron Marie               |3778/2|F
+COMP4920|5242366|Brown, Abdullah                  |3648/2|M
+COMP3411|5226837|Garcia, Zijian James             |3707/1|M
+COMP2041|5235687|Brown, Grace                     |3778/1|M
+COMP9044|5296587|Singh, Alvin Rose                |3707/2|F
+COMP3411|5289806|Smith, Xiaoyu Kumar              |3778/1|F
+COMP3331|5226837|Garcia, Zijian James             |3707/1|M
+COMP1521|5228441|Patel, Fatima                    |3778/1|F
+COMP4920|5259958|Haddad, Olivia Lee               |3778/1|M
+COMP2121|5238964|Lee, Bo Lee                      |3778/2|M
+COMP1521|5258623|Singh, Grace Rose                |3707/1|F
+COMP3311|5230443|Tran, Sanjay John                |3789/1|M
+COMP9044|5267407|Nguyen, Bo                       |3778/2|F
+COMP1531|5270896|Chen, Zeyu Anne                  |3707/1|F
+COMP2521|5213962|Okafor, Quan Kumar               |3707/2|F
+COMP3311|5228441|Patel, Fatima                    |3778/1|F
+COMP1511|5269867|Haddad, Olivia Wei               |3707/2|F
+COMP2041|5226837|Garcia, Zijian James             |3707/1|M
+COMP9044|5274589|Novak, Zhihao                    |3648/2|F
+COMP3411|5245601|Silva, Uma Rose                  |3648/3|M
+COMP2521|5226371|Brown, Isabella James            |3778/2|F
+COMP3121|5210272|Yilmaz, Callum Lee               |3648/3|F
+COMP3331|5240602|Tran, Hamish Marie               |3778/2|F
+COMP3331|5229691|Smith, Uma Anne                  |3707/1|M
+COMP1531|5230443|Tran, Sanjay John                |3789/1|M
+COMP3311|5232147|OConnor, Daniel                  |3778/3|M
+COMP9044|5284164|Okafor, Sanjay Marie             |3778/3|M
+COMP3121|5229691|Smith, Uma Anne                  |3707/1|M
+COMP3411|5232821|Chen, Fatima Anne                |3778/1|F
+COMP4920|5228441|Patel, Fatima                    |3778/1|F
+COMP3411|5295604|Patel, Nikhil Wei                |3778/1|M
+COMP2121|5287633|Smith, Olivia Lee                |3707/3|F
+COMP3121|5265841|Yilmaz, Mei Marie                |3778/2|M
+COMP2521|5224709|Nguyen, Zihao                    |3707/2|F
+COMP1521|5287633|Smith, Olivia Lee                |3707/3|F
+COMP2041|5226371|Brown, Isabella James            |3778/2|F
+COMP3411|5205580|Novak, Zeyu Anne                 |3707/2|F
+COMP2041|5233934|Patel, Alvin Rose                |3707/1|F
+COMP3121|5246197|Haddad, Zeyu Wei                 |3778/1|F
+COMP3311|5205879|Brown, Alvin Wei                 |3707/3|F
+COMP2121|5229691|Smith, Uma Anne                  |3707/1|M
+COMP3331|5279741|Wang, Brian                      |3789/1|M
+COMP1521|5229691|Smith, Uma Anne                  |3707/1|M
+COMP4920|5246197|Haddad, Zeyu Wei                 |3778/1|F
+COMP3411|5240560|Yilmaz, Xiaoyu James             |3648/3|M
+COMP2521|5232811|Smith, Callum                    |3648/2|F
+COMP3311|5219033|Yilmaz, Chen                     |3648/3|F
+COMP1511|5273184|Yilmaz, Wei                      |3778/2|F
+COMP9044|5209581|Okafor, Aditya                   |3648/2|M
+COMP3311|5266543|Brown, Aaron Marie               |3778/2|F
+COMP2521|5233934|Patel, Alvin Rose                |3707/1|F
+COMP3411|5265841|Yilmaz, Mei Marie                |3778/2|M
+COMP1531|5238964|Lee, Bo Lee                      |3778/2|M
+COMP2121|5246197|Haddad, Zeyu Wei                 |3778/1|F
+COMP2041|5219033|Yilmaz, Chen                     |3648/3|F
+COMP2521|5289806|Smith, Xiaoyu Kumar              |3778/1|F
+COMP1521|5244759|Khan, Hamish                     |3778/2|F
+COMP1531|5250785|Okafor, Wei Rose                 |3778/2|M
+COMP3331|5230443|Tran, Sanjay John                |3789/1|M
+COMP3311|5274589|Novak, Zhihao                    |3648/2|F
+COMP2121|5226837|Garcia, Zijian James             |3707/1|M
+COMP1511|5289806|Smith, Xiaoyu Kumar              |3778/1|F
+COMP1521|5230443|Tran, Sanjay John                |3789/1|M
+COMP2121|5279741|Wang, Brian                      |3789/1|M
+COMP2041|5267407|Nguyen, Bo                       |3778/2|F
+COMP3411|5226371|Brown, Isabella James            |3778/2|F
+COMP2041|5206182|Chen, Brian Rose                 |3789/1|M
+COMP2521|5284164|Okafor, Sanjay Marie             |3778/3|M
+COMP4920|5274589|Novak, Zhihao                    |3648/2|F
+COMP2521|5224676|Khan, Grace Anne                 |3707/2|M
+COMP9044|5241993|Okafor, Alvin Marie              |3707/1|M
+COMP1521|5201377|Kim, Xiaoyu Wei                  |3778/3|M
+COMP3331|5238964|Lee, Bo Lee                      |3778/2|M
+COMP3121|5232147|OConnor, Daniel                  |3778/3|M
+COMP9044|5231680|Nguyen, Nikhil Lee               |3707/3|F
+COMP1521|5267415|Novak, Brian Rose                |3648/2|F
+COMP2041|5260281|Kim, Tara Lee                    |3707/3|F
+COMP3311|5224709|Nguyen, Zihao                    |3707/2|F
+COMP1511|5284964|Kim, Fatima Kumar                |3648/2|F
+COMP1531|5258623|Singh, Grace Rose                |3707/1|F
+COMP2521|5238544|Garcia, Zijian Lee               |3707/2|M
+COMP3311|5252835|Chen, Abdullah                   |3707/1|M
+COMP3331|5234629|Okafor, Callum                   |3778/2|F
+COMP1511|5275311|Novak, Victor Anne               |3778/1|M
+COMP1521|5254988|OConnor, Callum James            |3778/3|M
+COMP4920|5265841|Yilmaz, Mei Marie                |3778/2|M
+COMP2521|5252345|OConnor, Abdullah                |3789/1|M
+COMP2041|5240602|Tran, Hamish Marie               |3778/2|F
+COMP2121|5245601|Silva, Uma Rose                  |3648/3|M
+COMP2041|5252835|Chen, Abdullah                   |3707/1|M
+COMP3121|5224709|Nguyen, Zihao                    |3707/2|F
+COMP3331|5254988|OConnor, Callum James            |3778/3|M
+COMP3331|5228441|Patel, Fatima                    |3778/1|F
+COMP3311|5242366|Brown, Abdullah                  |3648/2|M
+COMP2521|5229691|Smith, Uma Anne                  |3707/1|M
+COMP2121|5240602|Tran, Hamish Marie               |3778/2|F
+COMP2521|5235687|Brown, Grace                     |3778/1|M
+COMP2521|5231680|Nguyen, Nikhil Lee               |3707/3|F
+COMP3331|5217811|Singh, Ruby                      |3778/2|M
+COMP2041|5296587|Singh, Alvin Rose                |3707/2|F
+COMP9044|5227973|Garcia, Adrian Rose              |3778/1|M
+COMP1511|5242366|Brown, Abdullah                  |3648/2|M
+COMP1531|5268642|Kim, Yara Rose                   |3648/3|M
+COMP1521|5234629|Okafor, Callum                   |3778/2|F
+COMP2521|5244759|Khan, Hamish                     |3778/2|F
+COMP3411|5213962|Okafor, Quan Kumar               |3707/2|F
+COMP3121|5240602|Tran, Hamish Marie               |3778/2|F
+COMP3331|5281893|Kim, Mei John                    |3648/2|F
+COMP1531|5275311|Novak, Victor Anne               |3778/1|M
+COMP3311|5234629|Okafor, Callum                   |3778/2|F
+COMP1531|5289618|Garcia, Jia                      |3648/2|F
+COMP2041|5217811|Singh, Ruby                      |3778/2|M
+COMP3311|5238964|Lee, Bo Lee                      |3778/2|M
+COMP2521|5270896|Chen, Zeyu Anne                  |3707/1|F
+COMP3331|5201377|Kim, Xiaoyu Wei                  |3778/3|M
+COMP4920|5257689|Wang, Yara James                 |3707/3|M
+COMP1531|5254988|OConnor, Callum James            |3778/3|M
+COMP4920|5284964|Kim, Fatima Kumar                |3648/2|F
+COMP3311|5224676|Khan, Grace Anne                 |3707/2|M
+COMP9044|5234629|Okafor, Callum                   |3778/2|F
+COMP1531|5279741|Wang, Brian                      |3789/1|M
+COMP1521|5290637|Silva, Tara John                 |3707/2|F
+COMP9044|5215383|Haddad, Olivia                   |3648/3|F
+COMP9044|5224709|Nguyen, Zihao                    |3707/2|F
+COMP1521|5265841|Yilmaz, Mei Marie                |3778/2|M
+COMP3331|5243162|OConnor, Yara James              |3789/1|F
+COMP2041|5290637|Silva, Tara John                 |3707/2|F
+COMP1531|5216983|Singh, Abdullah James            |3778/1|M
+COMP1531|5217811|Singh, Ruby                      |3778/2|M
+COMP3121|5268642|Kim, Yara Rose                   |3648/3|M
+COMP1521|5284964|Kim, Fatima Kumar                |3648/2|F
+COMP1511|5225980|Lee, Wei Rose                    |3789/1|M
+COMP2041|5284964|Kim, Fatima Kumar                |3648/2|F
+COMP3411|5233958|Lee, Fatima Anne                 |3778/2|F
+COMP1531|5259958|Haddad, Olivia Lee               |3778/1|M
+COMP1531|5215383|Haddad, Olivia                   |3648/3|F
+COMP1531|5206182|Chen, Brian Rose                 |3789/1|M
+COMP9044|5232147|OConnor, Daniel                  |3778/3|M
+COMP1511|5238964|Lee, Bo Lee                      |3778/2|M
+COMP2041|5227973|Garcia, Adrian Rose              |3778/1|M
+COMP1511|5246197|Haddad, Zeyu Wei                 |3778/1|F
+COMP3411|5267415|Novak, Brian Rose                |3648/2|F
+COMP1511|5234789|Silva, Olivia Kumar              |3789/1|F
+COMP3311|5209581|Okafor, Aditya                   |3648/2|M
+COMP2121|5274589|Novak, Zhihao                    |3648/2|F

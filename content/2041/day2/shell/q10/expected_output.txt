@@ -1,0 +1,4 @@
+COMP1917|3360379|Costner, Kevin Augustus          |3978/1|M
+COMP2041|3860448|Steenburgen, Mary Nell           |3978/3|F
+COMP3311|3711611|Klum, Mary                       |3978/3|F
+COMP9044|5122456|Wang, Wei                        |3978/2|M

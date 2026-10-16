@@ -1,0 +1,5 @@
+Due 2026-08-07 and again 2026-11-03.
+No dates here at all.
+Born 1999-01-05, enrolled 2018-02-28, graduated 2021-12-31.
+Version 3/4 is not a date. Ratio 10/20 stays. But 2000-01-01 is a date.
+Range 2026-08-01 to 2026-08-31 inclusive.

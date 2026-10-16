@@ -1,0 +1,11 @@
+Weekly Report
+Generated 2026-08-07
+Author: cs2041
+--BEGIN--
+alice 72
+bob 91
+carol 65
+dave 88
+--END--
+Report complete
+Contact cs2041@cse.unsw.edu.au

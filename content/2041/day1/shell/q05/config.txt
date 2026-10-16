@@ -1,0 +1,15 @@
+# Server configuration
+# Updated 2026
+
+host = localhost
+port = 8080
+
+# Database settings
+db_name = students
+db_user = cs2041
+
+# Logging
+log_level = debug
+log_file = /var/log/app.log
+
+# end of file

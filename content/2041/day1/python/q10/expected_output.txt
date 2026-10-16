@@ -1,0 +1,4 @@
+row sums: 21 18 18 16
+col sums: 15 23 18 17
+total: 73
+max: 9 at (0,3)

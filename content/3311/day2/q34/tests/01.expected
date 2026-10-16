@@ -1,0 +1,14 @@
+MECH-G15 (Computer Lab, capacity 30)
+     Mon      Tue      Wed      Thu      Fri
+ 9   .        COMP1000 .        COMP1000 COMP1000
+10   .        COMP1000 .        COMP1000 COMP1000
+11   .        COMP1000 .        COMP1000 COMP1000
+12   COMP1917 COMP1000 .        COMP1000 COMP1000
+13   COMP1917 COMP3441 .        .        .
+14   .        COMP3441 COMP9021 COMP9315 .
+15   .        .        .        COMP9315 .
+16   COMP9414 COMP1917 COMP3441 .        .
+17   COMP9414 COMP1917 COMP3441 .        .
+18   COMP3441 .        COMP9311 .        .
+19   .        .        COMP9311 .        .
+20   .        .        .        .        .

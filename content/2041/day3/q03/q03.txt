@@ -1,0 +1,14 @@
+# Put a single grep command after each ANSWER: label.
+# Do not change anything else in this file.
+
+# 1. Fields Medal winners
+ANSWER:
+
+# 2. Awards given in the 1960s
+ANSWER:
+
+# 3. Winners from Japan (country field)
+ANSWER:
+
+# 4. Winners with a middle initial
+ANSWER:

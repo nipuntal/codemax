@@ -1,0 +1,15 @@
+# access log for august
+2026-08-01 10:14 GET /index.html
+2026-08-01 10:15 GET /style.css
+2026-08-03 09:02 GET /index.html
+2026-08-01 11:40 POST /login
+2026-08-03 09:10 GET /logo.png
+# maintenance window
+2026-08-05 14:00 GET /index.html
+2026-08-03 09:22 GET /about.html
+2026-08-01 12:00 GET /index.html
+2026-08-05 14:30 GET /style.css
+2026-08-03 10:01 POST /login
+2026-08-05 15:00 GET /index.html
+2026-08-03 11:11 GET /index.html
+2026-08-02 08:00 GET /index.html

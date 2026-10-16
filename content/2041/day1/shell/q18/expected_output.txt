@@ -1,0 +1,5 @@
+animals has 9 words
+greeting has 2 words
+numbers has 6 words
+shell has 9 words
+total: 26

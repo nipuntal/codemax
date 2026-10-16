@@ -1,0 +1,14 @@
+-- Module 24 -- exam-style
+-- A report on one room's week.
+
+drop function if exists q24(integer);
+create or replace function
+    q24(_room integer) returns setof text
+as $$
+declare
+    -- YOUR VARIABLES HERE
+begin
+    -- YOUR ANSWER HERE
+
+end;
+$$ language plpgsql;

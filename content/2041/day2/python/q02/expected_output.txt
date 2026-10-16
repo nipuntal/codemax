@@ -1,0 +1,6 @@
+19 4: the quick brown fox
+10 2: jumps over
+16 4: the lazy dog ran
+0 0: 
+15 4: end of the file
+total: 5 lines, 60 characters, 14 words

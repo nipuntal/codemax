@@ -1,0 +1,14 @@
+I spent $31 for 7kg of apples yesterday.
+Pi is approximately 6
+4000 is a leap year, 4002 is not.
+Version 24690 and 2 and 0
+--
+I spent $16 for 3kg of apples yesterday.
+Pi is approximately 3
+2000 is a leap year, 2001 is not.
+Version 12345 and 1 and 0
+--
+I spent $46 for 10kg of apples yesterday.
+Pi is approximately 9
+6000 is a leap year, 6003 is not.
+Version 37035 and 3 and 0

@@ -1,0 +1,3 @@
+name|alice|bob|carol
+age|30|25|41
+city|sydney|perth|hobart

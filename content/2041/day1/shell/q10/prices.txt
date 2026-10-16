@@ -1,0 +1,5 @@
+Widget costs 1500 dollars
+Gadget costs 20 dollars
+Doohickey costs 999 dollars and shipping is 45 dollars
+Free sample costs 0 dollars
+Bundle of 3 costs 250 dollars

@@ -1,0 +1,4 @@
+alice 72
+bob 91
+carol 65
+dave 88

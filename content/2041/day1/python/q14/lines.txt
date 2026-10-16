@@ -1,0 +1,11 @@
+z5312001
+alice@example.com
+07/08/2026
+-42
+hello
+z531200
+123abc
+COMP2041
+0
+7/8/2026
+z5312001@ad.unsw.edu.au

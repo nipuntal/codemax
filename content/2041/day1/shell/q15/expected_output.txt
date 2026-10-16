@@ -1,0 +1,4 @@
+a.txt: 3 lines
+b.txt: 2 lines
+nosuch.txt: not found
+c.txt: 5 lines
