@@ -10,6 +10,14 @@ import { GlowFilter, Shelf, courseBook, plankY, rails, setBooks, type Frame } fr
 
 const SHELVES = 2;
 
+/** A small floating credit, top right, linking to the author's site. */
+const Byline = () => (
+  <a class="byline" href="https://nipuntal.vercel.app" target="_blank" rel="noopener">
+    <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 2.5h15v15h-15zM6.5 14V6l7 8V6" /></svg>
+    By Nipun
+  </a>
+);
+
 /** Sizes everything off the book, and the book off the screen. */
 function layout(vw: number, vh: number) {
   const gap = Math.round(Math.min(40, Math.max(16, vw * 0.03)));
@@ -49,7 +57,7 @@ export function Shelves({ index }: { index: Index }) {
 
   const l = size.vw ? layout(size.vw, size.vh) : null;
   const dy = useShelfScroll(root, 2, selected ? 1 : 0, 0, 0);
-  if (!l) return <div class="shelves" ref={root} />;
+  if (!l) return <div class="shelves" ref={root}><Byline /></div>;
 
   const pick = (id: string) => {
     setCourse(id);
@@ -66,6 +74,7 @@ export function Shelves({ index }: { index: Index }) {
 
   return (
     <div class="shelves" ref={root}>
+      <Byline />
       <svg class="scene" width={size.vw} height={size.vh}>
         <GlowFilter />
         {r.back}
