@@ -10,11 +10,11 @@ import { GlowFilter, Shelf, courseBook, plankY, rails, setBooks, type Frame } fr
 
 const SHELVES = 2;
 
-/** A small floating credit, top right, linking to the author's site. */
+/** A small floating credit, bottom centre, linking to the author's site. */
 const Byline = () => (
-  <a class="byline" href="https://nipuntal.vercel.app" target="_blank" rel="noopener">
-    <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 2.5h15v15h-15zM6.5 14V6l7 8V6" /></svg>
-    By Nipun
+  <a class="byline" href="https://nipuntal.vercel.app" target="_blank" rel="noopener" aria-label="nipun's site">
+    <svg viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M2 2h16v16H2zM5 13.5h10v1.2H5zM7 7h3v6.5H7z" /></svg>
+    nipun
   </a>
 );
 

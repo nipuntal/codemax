@@ -345,14 +345,14 @@ pre.muted { margin: 4px 0 8px 22px; }
 .bk:hover .bk-front, .bk:focus-visible .bk-front, .bk.on .bk-front { stroke: var(--text); }
 .bk:hover .art, .bk:focus-visible .art, .bk.on .art { stroke: var(--text); }
 
-/* ---------- byline: a floating glass credit, top right ---------- */
+/* ---------- byline: a floating glass credit, bottom centre ---------- */
 .byline {
-  position: fixed; top: 16px; right: 16px; z-index: 10;
-  display: flex; align-items: center; gap: 9px; padding: 7px 13px 7px 8px;
-  font: 500 13px var(--sans); letter-spacing: 0.01em; color: var(--text);
+  position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 10;
+  display: flex; align-items: center; gap: 8px; padding: 7px 12px 7px 8px;
+  font: 500 13px var(--sans); color: var(--text); text-decoration: none;
   background: color-mix(in srgb, var(--bg) 60%, transparent);
   backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
   border: 1px solid var(--line);
 }
-.byline svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linejoin: miter; }
-.byline:hover, .byline:focus-visible { border-color: var(--text); box-shadow: 0 0 12px color-mix(in srgb, var(--text) 40%, transparent); outline: none; }
+/* a filled square with a shelf and a book cut out of it */
+.byline svg { width: 18px; height: 18px; fill: currentColor; }
