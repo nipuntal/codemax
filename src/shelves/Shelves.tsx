@@ -13,12 +13,14 @@ const SHELVES = 2;
 /** A small floating credit, bottom centre, linking to the author's site. */
 const Byline = () => (
   <a class="byline" href="https://nipuntal.vercel.app" target="_blank" rel="noopener" aria-label="nipun's site">
-    <svg viewBox="0 0 20 20" aria-hidden="true">
-      {/* a razorbill, head bowed: dark ground, the bird, its white chest and the line from eye to beak */}
-      <path d="M2 2h16v16H2z" fill="#3a3a3c" />
-      <path d="M6.6 18C7.1 16.1 8.9 15 11.2 14.9C14 15.4 16.4 16 18 16.6V18Z" fill="#fff" />
-      <path d="M18 13C15.7 12 13.7 10.4 13 8.2C12.4 5.4 10.3 4 8.2 4.3C5.8 4.7 4.4 7 4.8 9.3L7 15.7L8.9 12.3C9.3 13.6 10 14.5 11.2 14.9C14 15.4 16.4 16 18 16.6Z" fill="#0d0d0e" />
-      <path d="M10.2 8.6C8.9 9 7.6 9.7 6.1 10.9" stroke="#fff" stroke-width="0.4" stroke-linecap="round" fill="none" />
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      {/* a penguin, after the user's reference: flipper raised, white belly, on tan */}
+      <rect width="100" height="100" fill="#bf9b6b" />
+      <path fill="#161514" d="M85 21.6C82 21.2 79 22 76.6 23.6C74.2 25.6 73.2 29 72.8 33.4C72.6 36 72.6 38 72.4 40.4C76 41 80.6 43.4 82.2 47.6C83.2 50.6 80.6 52.2 77.4 51.4C75.4 50.9 73.6 50.2 72 49.6C70.4 56.8 66.4 63.4 61 69.4C58.4 72.2 56.8 75.6 56.6 80C61 81 65 82.4 67 84.6L23 84.6C24.6 83 26 81.4 27 79.4C27.8 77.4 28 75.4 28 73C28.6 63 30.4 52 35.6 42.6C31 37.4 24.6 30.6 18.6 24.6C15.4 21.4 16 16.6 20.6 16.4C30 16 41 21 47.6 27.2C52 27.8 56 25.6 58.8 21C61.6 16.4 66.6 14.2 71.4 14.4C75.2 14.6 78 16.6 79.4 19.4C81.6 20 83.6 20.6 85 21.6Z" />
+      <path fill="#fff" d="M64.8 25.4C68.6 24.6 71.2 27 71 31.6C70.8 40 70.4 49 66.6 57.6C63.6 64.4 58.6 70 57 76.8C56.6 79 55 81.2 51.8 81.4C46 81.6 40 80.6 40 76.4C40 70.4 44.4 63.6 50 56.6C55.8 49.4 61.6 42.4 62.8 34C63.2 30 63.2 27 64.8 25.4Z" />
+      <path fill="#161514" d="M50.4 64.2L54.2 78.4L52.6 78.6Z" />
+      <path d="M76 18.9L80.4 20.2" stroke="#fff" stroke-width="1" stroke-linecap="round" />
+      <path fill="#161514" d="M27 84.1H67V85.3H27Z" />
     </svg>
     nipun
   </a>

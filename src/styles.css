@@ -354,5 +354,5 @@ pre.muted { margin: 4px 0 8px 22px; }
   backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
   border: 1px solid var(--line);
 }
-/* the mark: a razorbill, head bowed, in fixed tones (it's a logo, so it doesn't invert) */
+/* the mark: a penguin on tan, in fixed colours (it's a logo, so it doesn't invert) */
 .byline svg { width: 20px; height: 20px; }
