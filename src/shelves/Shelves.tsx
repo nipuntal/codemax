@@ -12,7 +12,7 @@ const SHELVES = 2;
 
 /** A small floating credit, bottom centre, linking to the author's site. */
 const Byline = () => (
-  <a class="byline" href="https://nipuntal.vercel.app" target="_blank" rel="noopener" aria-label="nipun's site">
+  <a class="byline" href="https://nipuntal.vercel.app" aria-label="nipun's site">
     <svg viewBox="0 0 100 100" aria-hidden="true">
       {/* a penguin, after the user's reference: flipper raised, white belly, on white */}
       <rect width="100" height="100" fill="#fff" />
