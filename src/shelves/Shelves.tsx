@@ -13,7 +13,12 @@ const SHELVES = 2;
 /** A small floating credit, bottom centre, linking to the author's site. */
 const Byline = () => (
   <a class="byline" href="https://nipuntal.vercel.app" target="_blank" rel="noopener" aria-label="nipun's site">
-    <svg viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M2 2h16v16H2zM5 13.5h10v1.2H5zM7 7h3v6.5H7z" /></svg>
+    <svg viewBox="0 0 20 20" aria-hidden="true">
+      {/* a penguin's head: the square is the head, the face is cut out of it */}
+      <path d="M2 2h16v16H2z" />
+      <path class="face" d="M10 18C6 18 4.5 15 4.5 12C4.5 9 6.2 7.2 7.8 7.2C9 7.2 9.6 8 10 8.8C10.4 8 11 7.2 12.2 7.2C13.8 7.2 15.5 9 15.5 12C15.5 15 14 18 10 18Z" />
+      <circle cx="7.9" cy="11" r="0.95" /><circle cx="12.1" cy="11" r="0.95" /><path d="M8.3 12.5h3.4l-1.7 1.4z" />
+    </svg>
     nipun
   </a>
 );
