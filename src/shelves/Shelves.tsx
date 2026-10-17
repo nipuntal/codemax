@@ -14,10 +14,11 @@ const SHELVES = 2;
 const Byline = () => (
   <a class="byline" href="https://nipuntal.vercel.app" target="_blank" rel="noopener" aria-label="nipun's site">
     <svg viewBox="0 0 20 20" aria-hidden="true">
-      {/* a penguin's head: the square is the head, the face is cut out of it */}
-      <path d="M2 2h16v16H2z" />
-      <path class="face" d="M10 18C6 18 4.5 15 4.5 12C4.5 9 6.2 7.2 7.8 7.2C9 7.2 9.6 8 10 8.8C10.4 8 11 7.2 12.2 7.2C13.8 7.2 15.5 9 15.5 12C15.5 15 14 18 10 18Z" />
-      <circle cx="7.9" cy="11" r="0.95" /><circle cx="12.1" cy="11" r="0.95" /><path d="M8.3 12.5h3.4l-1.7 1.4z" />
+      {/* a razorbill, head bowed: dark ground, the bird, its white chest and the line from eye to beak */}
+      <path d="M2 2h16v16H2z" fill="#3a3a3c" />
+      <path d="M6.6 18C7.1 16.1 8.9 15 11.2 14.9C14 15.4 16.4 16 18 16.6V18Z" fill="#fff" />
+      <path d="M18 13C15.7 12 13.7 10.4 13 8.2C12.4 5.4 10.3 4 8.2 4.3C5.8 4.7 4.4 7 4.8 9.3L7 15.7L8.9 12.3C9.3 13.6 10 14.5 11.2 14.9C14 15.4 16.4 16 18 16.6Z" fill="#0d0d0e" />
+      <path d="M10.2 8.6C8.9 9 7.6 9.7 6.1 10.9" stroke="#fff" stroke-width="0.4" stroke-linecap="round" fill="none" />
     </svg>
     nipun
   </a>
